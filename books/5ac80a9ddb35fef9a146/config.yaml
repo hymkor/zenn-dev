@@ -8,3 +8,4 @@ summary: |-
 topics: ["vim", "shell", "windows", "nyagos", "scoop"]
 published: true
 price: 0
+allow_override: true

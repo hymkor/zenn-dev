@@ -12,3 +12,4 @@ summary: |-
 topics: ["windows", "bat", "batch", "batchfile", "cmd"]
 published: true
 price: 0
+allow_override: true

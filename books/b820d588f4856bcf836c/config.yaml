@@ -11,3 +11,4 @@ topics: ["go", "windows", "unicode", "コマンドプロンプト", "nyagos"]
 published: true
 price: 0
 toc_depth: 3
+allow_override: true
