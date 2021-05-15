@@ -1,0 +1,69 @@
+{
+  "title": "丸数字戦争",
+  "closed": true,
+  "archived": false,
+  "created_at": "2021-02-17",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "あ、nyagos のコマンドラインからなぜか「①」が入力できない！！！これから新版を公開するところだったのに！"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "さっそく go-console-test で早速解析してみたところ\n\n![](https://storage.googleapis.com/zenn-user-upload/kq6xk76hmy6lzuccgimvwx6f5q6d)\n\n9312 = 2460 : U+2460=&#x2460; なので、最後の UnicodeChar の値は正しい。他の絵文字と違うのは、ダミーのテンキー入力がないってところ。おいおい…\n\nこの①の入力は IME 経由でやっている。純粋なコマンドプロンプトだと nyagos でも①は普通に入力できる。WindowsTerminal 1.5.10411.0 だと確定した途端に「①」は消えてしまう。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "これまでの経緯はこちらのスクラップをご覧ください。\n\n- [合字ふたたび？](https://zenn.dev/zetamatta/scraps/c735949deaa6fb)\n\nこのプルリクが merge される前でよかった。\n\n- [Fix: some emoji could not be gotten in WindowsTerminal 1.5 by zetamatta · Pull Request #42 · mattn/go-tty](https://github.com/mattn/go-tty/pull/42)\n\nもう分からんようになってきた。これ、しばらくはオリジナルフォークを使った方がいいなぁ。WindowsTerminal の仕様変更で、いちいちプルリクで煩わせるわけにゆかぬ"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "IME経由だけでなく、右クリックによるペーストでも入力不可。これは英語圏の人に説明する上ではたすかる。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "ちなみに、コマンドプロンプトでは次のように KeyDown 時に 9312 = 2460 : U+2460=① が入ってる\n\n![](https://storage.googleapis.com/zenn-user-upload/o4txa8fhrry01iaq7w6hzj07odmb)\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "上の例は、IME 経由で①をコマンドプロンプトに入力した時。クリップボード経由だと KeyUp の時に文字コードが入る。難儀だなぁ…\n![](https://storage.googleapis.com/zenn-user-upload/r5jjlq1jg7aevw09qv1tokmb7rs6)\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "あ、つまり、WindowsTerminal の不具合とは言えないってことか"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "いちいち十進数を16進数に変換するのが大変なので、[go-console-test](https://github.com/zetamatta/go-console-test) を修正\n![](https://storage.googleapis.com/zenn-user-upload/0xkkqgipmubg71ebeyuu7w5btqy8)\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_updated_at": "2021-02-17",
+      "body_markdown": "最近、発生した、以下の問題がクリアされていることを確認せねばならない\n\n- （１）丸数字 「①」 の入力に問題がないこと（本件）\n- （２）絵文字 「👨‍🌾」の入力に問題がないこと（[合字ふたたび？](https://zenn.dev/zetamatta/scraps/c735949deaa6fb) / [DLC1](https://zenn.dev/zetamatta/books/b820d588f4856bcf836c/viewer/29db17)）\n- （３）異体字 「&#x908A;&#xE0104;」（シンニョウの点が一つ版）の入力に問題がないこと（[異体字](https://zenn.dev/zetamatta/books/b820d588f4856bcf836c/viewer/849ce9)）\n  - ただし、異体字セレクタはキーボードを通らないので、Ctrl-Y で処理できればよい\n- （４）ALT-TAB で端末の切り替えを行った後に入力した文字が二重に入力されないこと（[#393](https://github.com/zetamatta/nyagos/issues/393)）\n\nもう、やだ…（涙目）\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "![](https://storage.googleapis.com/zenn-user-upload/4rek7r6am9xb28dknb0vhqi5mbyh)\n\nよしゃ\n- 「①」は IME 入力・右クリックによるコピペともによし\n- 「👨‍🌾」は右クリックによるコピペよし\n- 「邊󠄄」（しつこいがシンニョウの点は一つ）は Ctrl-Y でペースト可能\n- ALT-TAB で端末を切り替えても、次に打った文字はダブらない\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "手元の試験では合格！\n\n- [go-readline-ny v0.4.3](https://github.com/zetamatta/go-readline-ny/releases/tag/v0.4.3) にて対応（なお、go-tty は改造版を internal ディレクトリに内蔵している模様。もうプルリクで人を振り回したくないので、安定するまでは様子見）\n- [nyagos](https://github.com/zetamatta/nyagos/) にも組み込んだが、バイナリのリリースはしばらく先で"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "丸数字・絵文字・異体字どんとこいの go-readline-ny v0.4.3 を組み込んだ nyagos を公開しました。\n\n- [Release 4.4.9_3 · zetamatta/nyagos](https://github.com/zetamatta/nyagos/releases/tag/4.4.9_3)\n\nこれにて一件落着！（と、いうことにする）"
+    }
+  ]
+}

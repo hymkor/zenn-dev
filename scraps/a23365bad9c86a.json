@@ -1,0 +1,56 @@
+{
+  "title": "[Go]os.Stdinへの全件読み込みを複数回すると、2回目以降先頭に余計な改行が必ず入ってきてしまう件",
+  "closed": false,
+  "archived": false,
+  "created_at": "2020-12-20",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-20",
+      "body_updated_at": "2020-12-20",
+      "body_markdown": "発端：\nhttps://zenn.dev/zetamatta/scraps/93d903e1d1382f#comment-fd4f97a45bbe07\n> だが、２回目以降の more で、なぜか先頭行にいきなり空行が入ってしまうという問題が…なぜ？\n\nリダイレクトなしの状態で、os.Stdin から２回全件読み込むと２回目の先頭に余計な空行が入ってしまうのです。検証プログラムを書いてみました。\n\n```go\npackage main\n\nimport (\n\t\"bufio\"\n\t\"os\"\n\t\"strings\"\n)\n\nfunc main() {\n\tsc1 := bufio.NewScanner(os.Stdin)\n\tbuf1 := []string{}\n\tfor sc1.Scan() {\n\t\tbuf1 = append(buf1, sc1.Text())\n\t}\n\n\tsc2 := bufio.NewScanner(os.Stdin)\n\tbuf2 := []string{}\n\tfor sc2.Scan() {\n\t\tbuf2 = append(buf2, sc2.Text())\n\t}\n\n\tprint(\"sc1=[\", strings.Join(buf1, \";\"), \"]\\n\")\n\tprint(\"sc2=[\", strings.Join(buf2, \";\"), \"]\\n\")\n}\n```\n\n結果：（nyagos はコンソールモードを変える場合があるので、素の CMD.EXE 下でやった）\n```C:\\Users\\hymko\\foo>foo\nA\nB\nC\n^Z\n1\n2\n3\n^Z\nsc1=[A;B;C]\nsc2=[;1;2;3]\n\nC:\\Users\\hymko\\foo>\n```\n\n`sc2=[;1;2;3]` を見ると、最初に入力した行を示す `1` の前に 0 文字の要素、つまり空行が入っている。これはどういうことでショウ？"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-20",
+      "body_markdown": "bufio のせいではなさそう\n\n```go\npackage main\n\nimport (\n\t\"io/ioutil\"\n\t\"os\"\n)\n\nfunc main() {\n\tbuf1, _ := ioutil.ReadAll(os.Stdin)\n\tbuf2, _ := ioutil.ReadAll(os.Stdin)\n\tprint(\"buf1=[\", string(buf1), \"]\\n\")\n\tprint(\"buf2=[\", string(buf2), \"]\\n\")\n}\n```\n\n```text\nC:\\Users\\hymko\\foo\\bar>bar\nA\nB\nC\n^Z\n1\n2\n3\n^Z\nbuf1=[A\nB\nC\n]\nbuf2=[\n1\n2\n3\n]\n```"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-20",
+      "body_markdown": "* [os: CtrlZ doesn't work on Windows · Issue #17427 · golang/go](https://github.com/golang/go/issues/17427)\n\n2016年くらいに [mattn](https://zenn.dev/mattn) 先生が立てた issue。Ctrl-Z を EOF として認識されていない件。当然ながら解決されているが、本件の調査をするために見るべきソースを特定するとっかかりになりそう\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-20",
+      "body_markdown": "（まぁ、当然だが）C言語(MinGW)ではそのような動作はない\n\n```C\n#include <stdio.h>\n#include <stdlib.h>\n\nchar *readstr()\n{\n    int c;\n    char *buffer = NULL;\n    size_t size=0;\n    while( (c = fgetc(stdin) ) != EOF ){\n        buffer = realloc(buffer,size+1);\n        buffer[size] = c;\n        size++;\n    }\n    buffer = realloc(buffer,size+1);\n    buffer[size+1] = '\\0';\n    return buffer;\n}\n\nint main()\n{\n    char *buffer1 = readstr();\n    char *buffer2 = readstr();\n\n    printf(\"buffer1=[%s]\\n\",buffer1);\n    printf(\"buffer2=[%s]\\n\",buffer2);\n\n    free(buffer1);\n    free(buffer2);\n}\n```\n\n```text\n$ a.exe\nA\nB\nC\n^Z\n1\n2\n3\n^Z\nbuffer1=[A\nB\nC\n]\nbuffer2=[1\n2\n3\n]\n```"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-20",
+      "body_markdown": "os.Stdin をオープンし直すという回避策を見つけたが、いいのかなぁ、こんなことして（リソースリークしそう）\n\nなお、os.Stdin をクローズしてしまうと、再オープンもできなくなってしまう模様\n\n```go\npackage main\n\nimport (\n\t\"io/ioutil\"\n\t\"os\"\n)\n\nfunc main() {\n\tbuf1, _ := ioutil.ReadAll(os.Stdin)\n\tos.Stdin = os.NewFile(os.Stdin.Fd(), os.Stdin.Name())\n\tbuf2, _ := ioutil.ReadAll(os.Stdin)\n\tprint(\"buf1=[\", string(buf1), \"]\\n\")\n\tprint(\"buf2=[\", string(buf2), \"]\\n\")\n}\n```\n\n```text\n$ bar\nA\nB\nC\n^Z\n1\n2\n3\n^Z\nbuf1=[A\nB\nC\n]\nbuf2=[1\n2\n3\n]\n```",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-20",
+          "body_markdown": "だめだ！nyagos に限っていうと、旧os.Stdinを指すポインタがいっぱい残っているので、インスタンスの作り直しは効かない。C言語でいうところの freopen 相当のものがあればよかったんだが…（うーん、全部直せるか？）"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-20",
+          "body_markdown": "```go\n*os.Stdin = *os.NewFile(os.Stdin.Fd(), os.Stdin.Name())\n```\n\nとすると大丈夫の時もあるが、結構な頻度で、GetConsoleMode() がエラー終了する。あまり、やらん方がよさそうだ。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-21",
+          "body_markdown": "more で使う os.Stdin の方を os.NewFile してみたが、それでも動作が不安定になる。os.NewFile で os.Stdin 自体をクローンするのはやらない方が無難のようだ。。。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-21",
+          "body_markdown": "具体的に言うと：\n\n```go\nf := os.NewFile(os.Stdin.Fd(), os.Stdin.Name())\n```\n\nこの f を内蔵 more の入力元にして、元の os.Stdin は何も触らないようにする。\n\nこれで、Ctrl-Z の後の読み残しを f の方に置き去りにしようということを考えたわけだが、どうも、これを何回も行うとプロセス中の何らかの資源が枯渇してしまうようで、GetConsoleHandle や、子プロセスの git show が失敗したりと奇妙なエラーが発生するようになる。\n\nダメだこりゃ"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+title: "Windows と Unicode とボク"
+summary: |-
+  「今まで Shift-JIS しか使えなかった Windows で UTF8 が使えるようになりました！」
+
+  素人だけでなく、Windows についてろくに知らないLinuxかぶれのプログラマまでに知ったふうなことを言っています。
+
+  別に Unicode の委員会とも縁があるわけではなく、単に UNIX と Windows 、ちょっとずつだけかじっただけの、たまたま独自シェル用に ReadLine を作ってみただけに過ぎない１プログラマのワタクシが世間の Unicode の認識にグチります。
+
+  そんな怪文書、はーじまーるよー
+topics: ["go", "windows", "unicode", "コマンドプロンプト", "nyagos"]
+published: true
+price: 0
+toc_depth: 3

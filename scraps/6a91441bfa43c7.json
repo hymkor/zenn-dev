@@ -1,0 +1,68 @@
+{
+  "title": "WIX Installer 関連メモ",
+  "closed": false,
+  "archived": false,
+  "created_at": "2021-02-20",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "同名でウェブページ作成ツールがあるが、インストーラーの方。「wix installer」でググった方がよい\n\n定番は [WiX チュートリアル 日本語訳](https://wix-tutorial-ja.github.io/) だが、ちょっと読み下せていない。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_updated_at": "2021-02-20",
+      "body_markdown": "- [WiX でセットアッププロジェクト - Qiita](https://qiita.com/hiro_t/items/2b51ec2d495eb31a07b0)\n\n> ### COM登録\n>DLLと、TLBをレジストリに登録しないといけないようです。\nregsvr32.exeをインストーラーの中で利用するのではなく、インストーラーが直接レジストリに登録する処理を行うと良いようです。\nこれも、heat.exeで、引数に、hoge.dll, hoge.tlb　をそれぞれ指定して、登録する項目を集めます\n\nセキュリティー上の理由で、インストーラーの中から一種のインストーラーである regsvr32 を呼ぶような真似はできないらしい。`regsvr32 XXXXX.dll` の相当の処理ができたかどうかは\n\n> HKEY_LOCAL_MACHINE\\SOFTWARE\\Classes\\AppID\\XXXXX.dll\n\nへの登録が出来ているかどうかでわかるらしい\n（※ 有識者に聞いたことを機械的に書いているので、解釈が間違っているかもしれないが）\n",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-20",
+          "body_markdown": "[WiX でセットアッププロジェクト - Qiita](https://qiita.com/hiro_t/items/2b51ec2d495eb31a07b0)\n\n> #### Orca\n> Orcaの利用までに手間がかかるので、\n> [SuperOrca](http://www.pantaray.com/msi_super_orca.html)\n> を利用するのも良いです。』\n\nOrca はどうも必須ツールっぽいので、ちゃんと入れて試してみねばと思っていたが、似たようなツールもあるのか Φ（。。）"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "- [WiX チュートリアル 日本語訳 Lesson 3 イベントとアクション / 2. 追加のアクション](https://wix-tutorial-ja.github.io/ch03/02-extra-actions.html)\n\n> プロパティの値を別のプロパティの値に割り当てる直接的な方法はありません。 しかし、カスタム・アクションを使うと、この間隙を乗り越えることが出来ます。 Value 属性は書式指定文字列でも構いませんので、ちょっとした文字列操作もすることが出来ます (パスの参照には、常に末尾のバックスラッシュが自動的に追加されている事に注意して下さい。 バックスラッシュをもう一つ余計に追加する必要はありません)。\n>\n>     <CustomAction Id='PropertyAssign' Property='PathProperty'\n >       Value='[INSTALLDIR][FilenameProperty].[ExtensionProperty]' />\n\nお、これは結構需要なテクかも。\n\nどうも、どういう場所でプロパティーが設定できるのか、できないのかがよく分かっていない。\n\n上の記載からすると、プロパティー値は基本的に static な値で、インストーラー起動時点で静的に決まっていなければいけないというものという印象を受ける。動的に変えるにはカスタムアクションを定義しなくてはいけないと。カスタムアクションは実行されるタイミングを別途定義しないといけないのも面倒だ。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "- [WiX チュートリアル 日本語訳 Lesson 3 イベントとアクション / 2. 追加のアクション](https://wix-tutorial-ja.github.io/ch03/02-extra-actions.html)\n\nこのサイト、いろいろ載ってるけど、逆引き的に調べられないのがつらいネ！\n\n>     <CustomAction Id='LaunchFile' FileKey='FoobarEXE'\n>         ExeCommand='' Return='asyncNoWait' />\n> \n> 第二に、通常と同じ方法で、アクションを予定に入れなければなりません。 アクションとスケジュール項目の間のリンクは、Id — Action の整合する属性のペアで指定します。 **インストールを実行する場合にだけ実行ファイルを起動し、製品を削除するときは起動しないように、条件を設定する必要があります**\n>\n>      <InstallExecuteSequence>\n>      ...\n>          <Custom Action='LaunchFile' After='InstallFinalize'>NOT Installed</Custom>\n>      </InstallExecuteSequence>\n\n→ インストール時だけ実行させる方法を知らなかったので、前に実装したときはバッチファイルを実行させるようにして、バッチファイルの中で判断させるというマヌケなことをしていた。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "- [WiX チュートリアル 日本語訳 Lesson 1 始めよう](https://wix-tutorial-ja.github.io/ch01/index.html)\n\nを読み返している。\n\n    *.wxs ファイル\n    ↓ (candle.exe)\n    *.wxiobj ファイル\n    ↓ (light.exe)\n    *.msi ファイル\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_updated_at": "2021-02-20",
+      "body_markdown": "\n```xml\n<Directory Id='TARGETDIR' Name='SourceDir'>\n```\n\n- Id 属性\n  - WXI の全ソース・ファイルで一意とされる識別子\n  - ProgramFilesFolder のような定義済みの名前が使用可能\n  - INSTALLDIR のようなプロパティ名(文字列変数とほぼ同じもの)も使用可能\n  - Directory タグでは、インストール先を示す Id となる？\n- Name 属性\n  - ディレクトリ名。既存ディレクトリ直下の場合は SourceDir 一択なのか？\n\n[Directory エレメント](http://cml.s10.xrea.com/ej/WiX/xsd/wix_xsd_directory.htm)"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "- [WiX チュートリアル 日本語訳 Lesson 1 始めよう / 2. 中に入るファイル](https://wix-tutorial-ja.github.io/ch01/02-the-files-inside.html)\n\n```xml\n<Shortcut Id=\"startmenuHoge10\"\n                    Directory=\"ProgramMenuDir\"\n                    Name=\"ほげ 1.0\"\n                    WorkingDirectory='INSTALLDIR'\n                    Icon=\"Hoge10.exe\" IconIndex=\"0\"\n                    Advertise=\"yes\" />\n```\n\n- Directory は *.lnk ファイル自体のディレクトリ\n- WorkingDirectory はショートカット内に記入される、実行時ディレクトリ\n- Name は (Name).lnk のようにショートカットの名前として使われる？ (Name属性は使われるタグによって用途が変わる？）"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "Merge 要素\n\n```xml\n<Directory Id=\"TARGETDIR\" Name=\"SourceDir\">\n  <Merge Id=\"$(var.SafeProdName)_msm\"\n    Language=\"1041\" DiskId=\"1\" SourceFile=\"$(var.ProdName)64.msm\" />\n</Directory>\n```\n\n- SourceFile : マージモジュールのソース位置へのパス\n\n[Merge エレメント](http://cml.s10.xrea.com/ej/WiX/xsd/wix_xsd_merge.htm)\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "アイコン\n\n```xml\n <Icon Id=\"icon.ico\" SourceFile=\"$(var.HOGE_TargetDir)HOGE.exe\"/>\n```\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-21",
+      "body_updated_at": "2021-02-21",
+      "body_markdown": "プロパティーに値を設定するには Property 要素を使う\n\n```xml\n<Property Id=\"INSTALLDIR\">\n  <RegistrySearch Id='PiyoHogeRegistry' Type='raw'\n      Root='HKLM' Key='Software\\Piyo\\Hoge 1.0' Name='InstallDir' />\n</Property>\n```\n\n【疑問】プロパティーを参照するルールが分からない。\n\n- Id 属性の場合は、そのままプロパティーの名前を書けばよいのか？\n- その他の属性の場合は、`[プロパティー名]` という形による引用でよいのか？\n- \n\n\n----\n\n- [WiX チュートリアル 日本語訳 Lesson 1 始めよう / 5. どこにインストールするか](https://wix-tutorial-ja.github.io/ch01/05-where-to-install.html)\n- [WiX チュートリアル 日本語訳 Lesson 6 COM、式の構文、その他 / 3. 書式指定文字列](https://wix-tutorial-ja.github.io/ch06/03-formatted-strings.html)\n\n\n### 参照例（１）\n\n`<Condition>条件式</Conition>` と <Publish>条件式</Publish>` の条件式の中でプロパティーが使える\n\n- [WiX チュートリアル 日本語訳 Lesson 6 COM、式の構文、その他 / 2. 式の構文](https://wix-tutorial-ja.github.io/ch06/02-expression-syntax.html)\n\n\n### 参照例（２）\n\n```\n<Property Id=\"FILEEXISTS\">\n  <DirectorySearch Id=\"CheckFileDir\" Path=\"[INSTALLDIR]\" Depth=\"0\">\n    <FileSearch Id=\"CheckFile\" Name=\"Lookfor.txt\" />\n  </DirectorySearch>\n</Property>\n```\n\n> 私たちはまだユーザー・インタフェイスを持っていませんが、 **ユーザーとの何らかの相互作用から値を受け取ってインストール・ロジックに引き渡すためのプロパティ (ユーザーが選択するインストール先フォルダや機能を示すプロパティなど)は、 public なプロパティである必要がある**、ということは、もう覚えておいても良いでしょう。 プロパティを public なものにするためには、**名前を全て大文字にする必要があります**\n\nまじか\n\n[WiX チュートリアル 日本語訳 Lesson 1 始めよう / 5. どこにインストールするか](https://wix-tutorial-ja.github.io/ch01/05-where-to-install.html)\n\n\n\n"
+    }
+  ]
+}

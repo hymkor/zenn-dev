@@ -1,0 +1,105 @@
+{
+  "title": "合字ふたたび？",
+  "closed": true,
+  "archived": false,
+  "created_at": "2021-02-09",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_updated_at": "2021-02-09",
+      "body_markdown": "[👨‍🌾（農夫）](https://emojipedia.org/man-farmer/)が、右クリックで WindowsTerminal にペーストできなくなってるぅぅぅぅ\n\n```\n$ ./go-console-test.exe\nHit ESCAPE key to stop.\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:13 VirtualScanCode:28 UnicodeChar:13 ControlKeyState:0}\n\n→ 起動時の Enter 入力\n\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:55357 ControlKeyState:0}\n\n→ U+D83D （MANのサロゲートペア前半っぽいが、KeyDownコードがない）\n\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:56424 ControlKeyState:0}\n\n→ U+DC68（MAN のサロゲートペア後半っぽいが、KeyDownコードがない）\n\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:8205 ControlKeyState:0}\n\n→ U+200D（ZeroWidthJoiner。これも KeyDownコードがない）\n\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:55356 ControlKeyState:0}\n\n→ U+D83C（稲穂のコードのサロゲートペアの前半。KeyDo…）\n\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:102 VirtualScanCode:77 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:99 VirtualScanCode:81 UnicodeChar:0 ControlKeyState:2}\nKeyEventRecord: &{KeyDown:0 RepeatCount:1 VirtualKeyCode:18 VirtualScanCode:56 UnicodeChar:57150 ControlKeyState:0}\n\n→ U+DF3E（あああああ\n\nKeyEventRecord: &{KeyDown:1 RepeatCount:1 VirtualKeyCode:27 VirtualScanCode:1 UnicodeChar:27 ControlKeyState:0}\n<DESKTOP-LGGUCRA:~/go/src/github.com/zetamatta/go-console-test>\n$\n```\n\n[APIから入力がとれなかった謎の Unicode 群！](https://zenn.dev/zetamatta/books/b820d588f4856bcf836c/viewer/ef707d)の不具合が悪化している！\n\norz\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_markdown": "「異体字」と格闘していたころは 1.4.3243.0 で、そのころはまだ農夫はいけてたような気がする。現在の WindowsTerminal は 1.5.10271.0 だ。この間に WindowsTerminal の不具合が悪化した可能性が高い。\n\nさすがに、こういう問題が起こるたびに go-tty の方に回避策をお願いするわけにはいかん。いい加減、WindowsTerminal の方に issue を書くか…"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_markdown": "WindowsTerminal + CMD.EXE だと、右クリックによるペーストで、なんかちゃんと受け取れてそうな感じなんだよな…\n\n![](https://storage.googleapis.com/zenn-user-upload/9yow3ssca9wrnihw9th2q11xfk6u)\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_updated_at": "2021-02-09",
+      "body_markdown": "なんとなく、左ALT-Down～左ALT-Up の間の ALT+テンキーパッド入力は、意味がなくても正解という気がしてきた。\n\nというのも、最終的に左ALT-Upの時に入力が確定するわけだから、ALT+テンキーパッドで Unicode の断片が入力されてもそれは加工しづらい情報で、そもそも役に立たない可能性が高いのである。\n\nおそらく重要なのは ALT+テンキーパッドが１文字以上打たれたという事実が重要で、どのように打たれたのかは読み取る方は気にしなくてよいのではないか？と"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_markdown": "テンキ―がある PC を使う機会があったので、ALT+128（Ç：U+00C7)、Alt+158（₧：U+20A7)の入力も出来ないなぁ。キーボードのモードが英語圏のものでないとダメなのかなぁ\n（ALT+数字キーが使えないと困るというわけじゃないけど、人に説明しやすいので）"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_markdown": "これが解決したら、おそらく「帰ってきたAPIから入力がとれなかった謎の Unicode 群」という章が「Windows と Unicode とボク」に追加されることであろう"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_markdown": "基本的に\n\n- 一般の入力は、オートリピート：押しっぱなしにすると、そのキーが押している間何回も入力されるという仕様を実現するために、キーが押された瞬間にキーが入力されるという動作になっている。\n- ALT+ユニコードの数字という入力に関しては、ALTを話した瞬間にそのユニコードが確定するので、ALTキーが離された瞬間にキーが入力されるという動作になる。\n  - ALTキーが離されるまでユニコードは確定されないから、途中のALT+数字キーが何であろうと実は関係ない。ALTキー+数字は一回以上押下が確認さればOkであり、入っているキー操作自体はダミーだと差し支えない\n\nさて、これを先生に説明しなくてはいけないわけだが、さすがに英語だけだとしんどいな…。日本語を併記するか（日本人同士だが、レポジトリの issue は外国人も読むので、ヘタッピでも英語で書くようにしていた）"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-10",
+      "body_markdown": "go-tty にプルリク投げました。\n\n- [Fix: some emoji could not be gotten in WindowsTerminal 1.5 by zetamatta · Pull Request #42 · mattn/go-tty](https://github.com/mattn/go-tty/pull/42)\n\n最初は日本語でこのスクラップに書いてあるような話も書こうとしたが、すごくクドクドとした長ったらしい文書になってしまったので、ボツ。シンプルに必要最小限のことだけを英語だけでシュッと書いた。\n\nあとは祈ろう"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-10",
+      "body_markdown": "プルリク、最初は 👨‍🌾 (MAN FARMER：U+1F468/‍U+200D/U+1F33E) を例にしていたが、今回の問題は合字関係ないみたいなので、合字ではない 👨 (MAN：U+1F468) にした。それでもまだサロゲートペアあるけど…"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-13",
+      "body_updated_at": "2021-02-13",
+      "body_markdown": "[SetConsoleMode](https://docs.microsoft.com/ja-jp/windows/console/setconsolemode)に、新設されたENABLE_VIRTUAL_TERMINAL_INPUT というビットを立てれば、状況は変わるかと思ったが…\n\n[検証プログラム](https://github.com/zetamatta/go-enableterminalinput-test)を書いてテストしてみたが、\n\n* 制御キー関係の入力はたしかに UNIX 風に変わる。右矢印のキーを押下すると、27(`ESC`)→91(`[`)→67(`C`) と UNIX風のシーケンスが KeyDown コードで入ってくる\n* だが、漢字や絵文字の入力は特に従来から変わらず。UTF16コードがそのままくるし、絵文字が KeyUp の時しか Unicode がこないのも同じ\n\nあまり、今回の件の解決には、直接役にたたなさそう…"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-14",
+      "body_updated_at": "2021-02-14",
+      "body_markdown": "Goで：\n（１）パッケージ X の forkとして X' を作る\n（２）X'←Y と参照するように Y の go.mod を設定する\n（３）Y←Z と参照した時、X←Zが一つでもあると、X'←Y←Z と参照してほしいところまで、X←Y←Z になってしまう\n\n仕方がないけど、めんどくさいな！\nhttps://twitter.com/zetamatta/status/1360552533089898500",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_markdown": "これを回避するには Go Modules の replace に依らないフォーク版管理が必要となる。\n\n1. X' の master ブランチの go.mod 中の module 文をちゃんと X' 自身を指すように変更する\n2. X' の新Releaseを GitHub で公開する\n3. Y での import 先を go.mod に依らず、直接 X' を指定する"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_updated_at": "2021-02-14",
+          "body_markdown": "module 文の更新を忘れて、リリースを行ってしまうと、とても面倒くさいことになる。\n\nたとえば、一度、v0.0.4 とタグをうってリリースしてしまうと、それがどこかにキャッシュされてしまうようだ。後からv0.0.4 を取り消して、module 文を修正して、再度 v0.0.4 をリリースしても、他のパッケージのビルド時に過去のバージョンの方を参照されてしまう。\n（ https://twitter.com/zetamatta/status/1360821372784496651 ）\n\nこの難儀な症状だが、GitHub 上で「**module 文をちゃんと修正したはず版**」の Release/Tag を v0.0.4 から v0.0.5 に「**リネーム**」したら直った。リリース発行は気をつけないといけないな"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_markdown": "ふと思ったが、こういう X' みたいなパッケージって Y の internal/ の下で管理した方がよかったのかもしれないな"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_markdown": "> それがどこかにキャッシュされてしまうようだ\n\nこれ、どこにキャッシュされるんだろうなぁ。~/go/pkg/mod の下のそれっぽいのは削除して、GOPROXY=direct にしても解消しなかった。\n後から復活した ~/go/pkg/mod のソースを見ると、見事に古いバージョンの go.mod が復活していたので、ネットワーク上のどこか…なのだろう。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_markdown": ">（３）Y←Z と参照した時、X←Zが一つでもあると、X'←Y←Z と参照してほしいところまで、X←Y←Z になってしまう\n\nこういうのは一見、Z 側で回避できそうにも見えるが、実は Y が Z に対して公開している構造体の中で、Xの公開型を参照していることもあって回避できない場合もある。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_markdown": "> module 文を修正して、再度 v0.0.4 をリリースしても、他のパッケージのビルド時に過去のバージョンの方を参照されてしまう\n\nFrom: [非公開モジュールやローカルで変更したモジュールをGo Modules(vgo)環境で利用する3つの方法 - Fenrir Engineers](https://engineers.fenrir-inc.com/entry/2018/10/19/170613)\n\n>モジュールを事前にダウンロードしたことがあれば、$GOPATH/pkg/mod/cache/download 以下がこの構造になっています\n\nあ、削除した場所が違うなぁ。俺は ~/go/pkg/mod/github.com…以下のフォルダーを削除してた。別にネット上のキャッシュ情報を参照していなかったのかもしれない"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-14",
+      "body_markdown": "マージはともかくとして、合字自体は解決したので、一旦、本スクラップはクローズします。"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "title": ".NET の文字列比較はたいへんだな",
+  "closed": true,
+  "archived": false,
+  "created_at": "2021-04-30",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "### [.NET での文字列の比較に関するベスト プラクティス | Microsoft Docs](https://docs.microsoft.com/ja-jp/dotnet/standard/base-types/best-practices-strings)\n\n> String .Compare メソッドと String.CompareTo メソッドは、文字列を並べ替える場合に使用し、文字列の等価性を確認する場合には使用しません\n\nなんやて…マジかよ"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "> 2 つの文字列が等価かどうかをテストするには、String.Equals メソッドのオーバーロードを使用します。\n\nNothing でも落ちないから String.Compare 多用してたわ。Equals を使えだと？"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "今まで、英語の大文字・小文字を区別しない比較は String.Compare( ～, ～, CurrentCultureIgnoreCase ) とかを使ってた。根拠は **「雰囲気」**\n\n> InvariantCultureIgnoreCase\tインバリアント カルチャを使用して、大文字と小文字を区別しない比較を実行します。\n\nインバリアントカルチャとはなんぞやと思って検索してみた。\n\n- [CurrentCultureとInvariantCultureの違い (C#) - .NET サンプルコード - 総武ソフトウェア推進所](https://smdn.jp/programming/dotnet-samplecodes/string/3aa7c090024111eb907175842ffbe222/)\n\n* CurrentCulture\n    * 現在のカルチャに基づいた比較\n    * 日本語圏では、読みの順になるため「亜」＜「井」\n    * 英語圏では、コードポイント順になるため「井」＜「亜」\n* InvariantCulture\n    * 特定の文化圏や言語に依存しないインバリアントカルチャに基づいた比較\n    * 日本語圏でも英語圏でも「井」＜「亜」\n\nなるほど"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "### [.NET での文字列の比較に関するベスト プラクティス | Microsoft Docs](https://docs.microsoft.com/ja-jp/dotnet/standard/base-types/best-practices-strings)\n\n> パフォーマンスを向上させるには、StringComparison.Ordinal または StringComparison.OrdinalIgnoreCase による比較を使用します。\n\n関連ページを一通りみたところ、static method の\n\n```cs\npublic static bool Equals (string? a, string? b);\npublic static bool Equals (string? a, string? b, StringComparison comparisonType);\n```\n\nを使うのが正解のようだ。英大文字・小文字の区別をしない時は後者の第３引数に StringComparison.OrdinalIgnoreCase を与えればよいということかな\n\n\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_updated_at": "2021-04-30",
+      "body_markdown": "ところで\n\n```cs\npublic static bool Equals (string? a, string? b);\n```\n\n`string?` って Nullable<string> だと思うんだけど、なんで Nullable なんだろ。string は structure ではなく class なので null (Nothing) は大丈夫だと思うんだが…\n\nこれはユーザに「NULLでも大丈夫」だと明示するために、わざとそう書いているだけだろうか…"
+    },
+    {
+      "author": "overthestardust",
+      "created_at": "2021-04-30",
+      "body_markdown": "string?は C# 8.0で入った null 許容参照型 ではないでしょうか。\nhttps://docs.microsoft.com/ja-jp/dotnet/csharp/nullable-references\n",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2021-04-30",
+          "body_markdown": "どうやら、そのようですねー。ありがとうございます"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "ttps://twitter.com/kariya_mitsuru/status/1387999438577172485\n> 勘ついでに、String? は C#8 で導入された null 許容参照型への対応とかじゃないですかね？（勘ついでとは…\n\nあー、なるほど。null が来たら、コンパイラレベルで警告を出せるようになったと。だからわざわざ Nullable で宣言が必要になったわけかー\n\n* [null 許容参照型 - C# によるプログラミング入門 | ++C++; // 未確認飛行 C](https://ufcpp.net/study/csharp/resource/nullablereferencetype/)\n\n奥が深い（便利だ）\n",
+      "children": [
+        {
+          "author": "spiegel",
+          "created_at": "2021-05-01",
+          "body_markdown": "Java の話ですけど，久しぶりに仕事で Java を書いてて「null 文字列」がありうることをすっかり忘れてたために意図しないところでヌルポになってしまい，思い出すまでひとしきり悩んでました。\n\nGo だと文字列は（ポインタで明示的に渡さない限り）値なので「null 文字列」とか気にしなくてよかったので油断してましたw"
+        }
+      ]
+    }
+  ]
+}

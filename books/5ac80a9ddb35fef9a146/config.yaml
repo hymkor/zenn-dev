@@ -1,0 +1,10 @@
+title: "scoop / nyagos で始めるコマンドライン生活"
+summary: |-
+  Windows で UNIX ライクな開発環境を整えるとなると、Cygwin , MSYS , MinGW , Windows Subsystem for Linux があります。しかしながら、これらは UNIX/Linux の互換性を第一と考えられているため、本来の Windows 環境との互換性が断絶してしまっており「Windows 向けの作業」をコマンドラインから行う作業に用いるにはつらいという一面があります。
+
+  nyagos (Nihongo Yet Another GOing Shell)は Go 言語でスクラッチから作られたコマンドラインシェルです。そのため、パスが Windows で標準の C:\PATH\TO という表記がそのまま使え、CMD.EXE で使えるコマンドがそのまま利用できることを目指しています。それでいてキーバインドが bash や tcsh と同様に Emacs 準拠になっているため、UNIX/Linux に慣れた方でも違和感なく操作ができます。
+
+  本書では、scoop という Windows 向けのパッケージ管理システムを通じての nyagos のインストールと必要最小限のセットアップ方法を説明します。あまり個々のツールに仕様に無用に深入りをすることは避けますので、ストレス最小でコマンドライン環境を立ち上げることができるのではないかと思います。
+topics: ["vim", "shell", "windows", "nyagos", "scoop"]
+published: true
+price: 0

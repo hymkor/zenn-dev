@@ -1,0 +1,77 @@
+{
+  "title": "記事のバックアップ",
+  "closed": true,
+  "archived": false,
+  "created_at": "2021-04-30",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "ウェブインターフェイスで不満はなかったので、GitHub 連携をせず、ウェブで記事を書いてたけど、履歴管理できないのが不便。すでに公開した記事の markdown をバックアップする方法はないか？\n\n手動でやるならば、\n- https://zenn.dev/zetamatta/articles/d7b76ff6535d7d\n\nという記事に対して\n\n- https://zenn.dev/api/articles/d7b76ff6535d7d/blob.md\n\nという URL で markdown ソースを確認できる。が、これはログイン済みのブラウザ経由でしか開けない。ログアウトした状態だとエラーらしきテキストが得られるだけだ。\n\n単品記事ならばこれでよいが、Book がある場合、これは厳しい。\n\nRSS フィードは https://zenn.dev/zetamatta/feed で得られるが、こちらには markdown テキスト、もしくは markdown へのリンクなどは出ていないようだ。",
+      "children": [
+        {
+          "author": "catnose99",
+          "created_at": "2021-05-01",
+          "body_markdown": "GW明けにエクスポート機能を公開します…！ダウンロードしたファイルをそのまま連携したGitHubリポジトリに配置することでスムーズにGitHub連携がはじめられます。\n\nもうしばらくお待ちいただくのが良いかもしれません。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-05-01",
+          "body_markdown": "ありがとうございます！"
+        },
+        {
+          "author": "spiegel",
+          "created_at": "2021-05-11",
+          "body_markdown": "きましたね！\n\nhttps://zenn.dev/zenn/articles/setup-zenn-github-with-export"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "### 記事：[Zennの記事をexportする](https://zenn.dev/yajamon/articles/ebd678f0dd57936e7673)\n\nこの記事では JavaScript を開発者コンソールから実行するという方法をとっている。ただし、HTML として得られた情報を逆変換するということをやっているようで、オリジナル markdown が得られるわけではないようだ。\n\nただし、この記事に、運営氏から\n\n> 現在、zenn.devから連携したGitHubリポジトリへコミットする機能の実装を検討しています。\n\nというコメントが出ているので、将来的に公式からの対応も期待はできそうだ。また\n\n> ちなみにユーザーご自身の記事であれば、以下のURLを打ち込むことでマークダウンを取得できます。\n> \n>     https://zenn.dev/api/articles/記事のslug/markdown\n\nとのコメントも出ている。/markdown の方だと、/blob.md と違って JSON で出ているので、加工がなくてよい分、拾い上げるのが楽そうである。が、こちらもやはりログアウト状態だと、アクセスできない（扉ページへリダイレクトされる）"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "### [GitHub - ganezasan/zenn-to-pdf: export articles on zenn.dev to pdf by using puppeteer](http://jimyb.com/ganezasan/zenn-to-pdf)\n\nzenn の記事を PDF 化するツールのようだ。\n\n* node.js を使っている\n* Google API を使ってログインをしている？"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-30",
+      "body_markdown": "### [サンプルを動かして理解するchromedp (GoでChromeを操作する)](https://zenn.dev/uechoco/articles/2f811aead07880)\n\nheadlessモード（UIのウィンドウなし）のChromeを Go 言語から操作して、ウェブのスクレイピングをやろうという試み。新しい技を習得するという意味でトライする価値はあるかもしれない。究極奥義かも"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_markdown": "chromedp の記事をいろいろ見たが、HTMLページをスクレイピングするのが前提で、HTMLのどの場所の DOM 要素に対して操作を行うというような内容を説明している場合がほとんどだ。\n\nなので、minetype が text/html でない生の JSON , markdown をゲットする場合、どの関数・メソッドを呼び出すべきかが分からない。まぁ、普通、そういう場合は http で直接問い合わせるわなー。だが、それには Googleの OAuth の認証を通らないといけないので、そうもいかんのだ。\n\nOAuth は twitter で一度やったことあるけど、[zetamatta/tmt: tmt - Twitter Maintenance Tool](https://github.com/zetamatta/tmt)）の時は twitter から OAuth のトークンを得て、twitter の API にアクセスするライブラリを使うだけというものだったからなぁ。Google から OAuth のトークンを得て、Zenn の普通の URL にアクセスするとなると難度がぶわっとあがる、ぶわっと。心折れそう"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_markdown": "「chromedp save page」で検索したところ、出てきたページ\n\n* [How to get fulle page source html code? · Issue #128 · chromedp/chromedp](https://github.com/chromedp/chromedp/issues/128#issuecomment-498051634)\n\nこれが要求に最も近いか？"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_markdown": "https://github.com/chromedp/chromedp/issues/128#issuecomment-461324273\n\nのソース中にある、\n\n```\nout, err := exec.Command(\"sh\", \"-c\", \"/root/tools/chromium-latest-linux/latest/chrome --headless --no-sandbox --dump-dom http://url_here\").Output()\n```\n\nの chrome を `C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe` に変えてもダメ。\nどうも、使用中の chrome は、--dump-dom オプションをサポートしていないらしい"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_markdown": "* https://github.com/chromedp/chromedp/issues/128#issuecomment-461265557\n\nこちらのサンプルで行けそう。ただし、記事のソースの markdown への直接の訪問はダメだった。\nだが、https://zenn.dev/ 、すなわち、トップだと、全部コードがとれっぽい。\n今後のアプローチとしては\n\n1. サンドボックスなしモードでゆく\n2. まじめにログインの経路をとおる\n\nのいずれかでゆけばよい希ガス。\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_updated_at": "2021-05-01",
+      "body_markdown": "2. まじめにログインの経路をとおる\n\n→ zenn.dev のログイン状態が維持できてないのに、なぜ Google のログイン状態は維持されると思った？\n\n1. サンドボックスなしモードでゆく\n\n→ 「そういうの、実はもしかしてないのでは？」という考えが脳裏をよぎる。そこへ\n\n> GW明けにエクスポート機能を公開します…！ダウンロードしたファイルをそのまま連携したGitHubリポジトリに配置することでスムーズにGitHub連携がはじめられます。\nhttps://zenn.dev/zetamatta/scraps/de1f4ab13a37ea#comment-bd15eec82597d1\n\nとのコメント。よし、それ、待とう！"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_updated_at": "2021-05-01",
+      "body_markdown": "あ、もう本件では使わないけど\n\n* [headzoo/surf: Stateful programmatic web browsing in Go.](https://github.com/headzoo/surf)\n\nというものもあるようだ。こちらは chromedp みたいに Chrome をコントロールするものではなく、仮想的なブラウザをでっちあげるもののようだ。すげー！"
+    }
+  ]
+}

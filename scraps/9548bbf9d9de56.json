@@ -1,0 +1,46 @@
+{
+  "title": "使い捨てスクリプト供養",
+  "closed": false,
+  "archived": false,
+  "created_at": "2020-12-13",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-13",
+      "body_markdown": "削除する前に供養するスレとなります"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-13",
+      "body_updated_at": "2020-12-13",
+      "body_markdown": "### (1) clipboard_run.go\n\nクリップボードの中に格納されているテキストの Unicode を表示するために書いたらしい。\nたぶん、[Recovery issue 390 Unicode · Issue #394 · zetamatta/nyagos](https://github.com/zetamatta/nyagos/issues/394) 向け。go run 用なので、nyagos ビルド時に組み込まれないように、先頭に `// +build ignore` が書いてある。\n\n```go\n// +build ignore\n\npackage main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\n\t\"github.com/atotto/clipboard\"\n\t\"github.com/mattn/go-runewidth\"\n)\n\nfunc main() {\n\ttext, err := clipboard.ReadAll()\n\tif err != nil {\n\t\tfmt.Fprintln(os.Stderr, err.Error())\n\t\treturn\n\t}\n\tfor _, r := range text {\n\t\tfmt.Printf(\"'%c'<%X>[%d] \", r, r, runewidth.RuneWidth(r))\n\t}\n\tfmt.Println()\n\tfmt.Println(text)\n}\n```"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-13",
+      "body_markdown": "### (2) tty_windows.go\n\nあれ？最近似たようなもの書いたような気が。コンソールの設定レベルで Ctrl-C を無効にする関数定義（**スクリプトじゃねーじゃねーか**）。タイムスタンプを見るとMar 31 2019とある。\n\n「設定を元に戻すクロージャ」を戻り値に返すのは、一つの定番的な書き方ですなぁ\n\n```go\n// +build shisakuhin\n\npackage nodos\n\nimport (\n\t\"golang.org/x/sys/windows\"\n)\n\nfunc DisableProcessInput() (func(), error) {\n\tvar mode uint32\n\terr := windows.GetConsoleMode(windows.Stdin, &mode)\n\tif err != nil {\n\t\treturn func() {}, err\n\t}\n\n\tnewMode := mode\n\tnewMode &^= windows.ENABLE_PROCESSED_INPUT // Ctrl-C off\n\tnewMode |= windows.ENABLE_LINE_INPUT\n\tnewMode |= windows.ENABLE_ECHO_INPUT // echo back\n\n\terr = windows.SetConsoleMode(windows.Stdin, newMode)\n\tif err != nil {\n\t\treturn func() {}, err\n\t}\n\n\treturn func() {\n\t\twindows.SetConsoleMode(windows.Stdin, mode)\n\t}, nil\n}\n```\n\n\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-19",
+      "body_markdown": "### (3) postone.go\n\nなんか、slack に投稿するコードのようだ。でも、会社、slack から teams へ移行したんだよな。だから、もう使うシーンはない\n\n```go\npackage main\n\nimport (\n\t\"bufio\"\n\t\"bytes\"\n\t\"encoding/json\"\n\t\"fmt\"\n\t\"net/http\"\n\t\"os\"\n)\n\ntype Message struct {\n\tText    string `json:\"text\"`\n\tChannel string `json:\"channel\",omitempty`\n}\n\nfunc (json1 *Message) PostTo(webHookUrl string) error {\n\tbin, err := json.Marshal(json1)\n\tif err != nil {\n\t\treturn err\n\t}\n\tfmt.Println(string(bin))\n\n\tres, err := http.Post(webHookUrl, \"application/json\", bytes.NewReader(bin))\n\tif err != nil {\n\t\treturn err\n\t}\n\tfmt.Println(res.Status)\n\tsc := bufio.NewScanner(res.Body)\n\tfor sc.Scan() {\n\t\tfmt.Println(sc.Text())\n\t}\n\tif err := sc.Err(); err != nil {\n\t\tfmt.Fprintln(os.Stderr, err)\n\t}\n\tdefer res.Body.Close()\n\treturn nil\n}\n\nconst (\n\tWEBHOOKURL   = \"https://hooks.slack.com/services/xxxx/yyyy/zzzzz\"\n\tTEST_CHANNEL = \"wwwwwww\"\n)\n\nfunc main() {\n\tmessage := &Message{\n\t\tText:    \"Post Test\",\n\t\tChannel: TEST_CHANNEL,\n\t}\n\tif err := message.PostTo(WEBHOOKURL); err != nil {\n\t\tfmt.Fprintln(os.Stderr, err)\n\t\tos.Exit(1)\n\t}\n}\n```"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-27",
+      "body_updated_at": "2021-01-27",
+      "body_markdown": "### （４）\n\n嘔吐CADで、図面に貼り付けられたラスターイメージの情報をコンソールに出すコードらしいぜ\n（コピペでコンソールに貼り付けたコードなので、ファイル名すらない）\n\n```lisp\n(progn\n    (setq ss (ssget \"X\" '((0 . \"image\")))\n     count (sslength ss)\n    )\n    (while ( > count 0 )\n        (setq count (1- count)\n              en (ssname ss count)\n              en (entget en)\n        )\n        (prin1 en)\n    )\n    (princ)\n)\n```"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-28",
+      "body_updated_at": "2021-02-28",
+      "body_markdown": "### （５）\n[go getだけでコマンドのバージョンを埋め込む - Plan 9とGo言語のブログ](https://blog.lufia.org/entry/2020/12/18/002238) の検証のため、書いてみた。\n\n```go\npackage main\n\nimport (\n\t\"fmt\"\n\t\"runtime/debug\"\n)\n\nfunc main() {\n\tif info, ok := debug.ReadBuildInfo(); ok {\n\t\tfmt.Println(info.Main.Version)\n\t} else {\n\t\tfmt.Println(\"not found.\")\n\t}\n\treturn\n}\n```\n\nだが、記事中にあるように、「カレントディレクトリがmainモジュールと同じ場合」は常に `(devel)` になってしまうらしい。残念\n\n```\n$ ./go-version-tag.exe\n(devel)\n```\n\nつらい"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-01",
+      "body_markdown": "### zenndown/main.go\n\n[記事のバックアップ](https://zenn.dev/zetamatta/scraps/de1f4ab13a37ea) で、がんばったコード。記事のソース `https://zenn.dev/api/chapters/4580/blob.md` は直接とれないけど、 `https://zenn.dev/` ならとれた（意味がない）\n\nエクスポート機能が間もなく登場しそうだということで、当初目指したものは不要になったが、chromedp という Chrome をコントロールして、スクレイピングする技術自体は今後活用できそうな気がする。\n\n```go\npackage main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\t\"os\"\n\n\t\"github.com/chromedp/chromedp\"\n\t\"github.com/chromedp/cdproto/dom\"\n)\n\nfunc get(url string)error{\n\tctx, cancel := chromedp.NewContext(context.Background())\n\tdefer cancel()\n\n\tvar res string\n\n\terr := chromedp.Run(ctx,\n\t\tchromedp.Navigate(url),\n\t\tchromedp.ActionFunc(func(ctx context.Context) error {\n\t\t\tnode, err := dom.GetDocument().Do(ctx)\n\t\t\tif err != nil {\n\t\t\t\treturn err\n\t\t\t}\n\t\t\tres, err = dom.GetOuterHTML().WithNodeID(node.NodeID).Do(ctx)\n\t\t\treturn err\n\t\t}),\n\t)\n\tfmt.Println(res)\n\treturn err\n}\n\nfunc main() {\n\t// if err := get(`https://zenn.dev/api/chapters/4580/blob.md`); err != nil {\n\tif err := get(`https://zenn.dev/`); err != nil {\n\t\tfmt.Fprintln(os.Stderr, err.Error())\n\t\tos.Exit(1)\n\t}\n}\n```"
+    }
+  ]
+}

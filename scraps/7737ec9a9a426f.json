@@ -1,0 +1,114 @@
+{
+  "title": "Unicodeとの異体字バトルがはじまったぜ",
+  "closed": true,
+  "archived": false,
+  "created_at": "2021-01-10",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_markdown": "あああああ、『邊󠄆』を nyagos のコマンドラインで扱うと、文字幅の解釈がおかしくなってしまう！まだだ、まだ 4.4.9_2 では終われない。俺たちの Unicode との戦いはこれからだ！Never End!\n\n- [【Golang】Unicode上複数コードからなる文字をruneで扱う場合の挙動 - Ren's blog](https://rennnosukesann.hatenablog.com/entry/2021/01/09/120802)\n\n(https://twitter.com/NyaosOrg/status/1347902038445682694 )"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_updated_at": "2021-01-10",
+      "body_markdown": "サポートしていない異体字セレクタコードだった。リストにコードを追加した。でも、いま異体字を表示できるターミナルはないので <U+xxxxxx>表記するしかない。あと、Ctrl-Yのペーストでは大丈夫だが、右クリックペーストでは異体字セレクタコード消えてしまう（受け取れない）\n\nこれは緊急性はないが"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_updated_at": "2021-01-10",
+      "body_markdown": "Windows Terminal では、異体字よく見ると、ちゃんとフォント変わってるわ！「U+908A 」単品と「U+908A U+E0104」では「しんにょう」の点の数が違うわ。これはサポートしたいな"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_updated_at": "2021-01-10",
+      "body_markdown": "WindowsTerminal で\n```go\nfmt.Printf(\"[%c][%c%c]\\n\",0x908A,0x908A,0xE0104)\n```\nを実行すると\n![](https://storage.googleapis.com/zenn-user-upload/2yb1gd2ybuvaqcggwd7dvn9k6y3j)\nとなる。これを コマンドプロンプトで行うと\n![](https://storage.googleapis.com/zenn-user-upload/fu4yktz7bjazwqfznl7lnq8bekfj)\nになる。\n\nいけると思ったが、よく見るとカーソル位置が違う。WindowsTerminal では3セル分文字幅を使っているように見えるが、実は4セル分カーソルが移動してしまっているという現象が発生する。これのせいで、\n\n* ReadLineで{0x908A,0xE0104} を3セルとみなすと、見かけは3セルにしか見えないが、実際のカーソル位置は４セル分動いているから、カーソル位置の整合性が狂う\n* ReadLineで{0x908A,0xE0104} を4セルとみなすと、カーソル位置は狂わないが、そのかわり再表示する時に文字が化ける\n\nという現象が発生する。",
+      "children": [
+        {
+          "author": "spiegel",
+          "created_at": "2021-01-10",
+          "body_markdown": "ちなみに Ubuntu 標準の Terminal で上のコードを実行すると以下の感じに。\n\n![異体字 in Ubuntu Terminal](https://storage.googleapis.com/zenn-user-upload/a8ykoss0hok8xr18yvxvqt0do043)\n\n標準フォントだと異体字の字形は持ってないのか。その代わり2セル分の幅になります。面倒なw"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-01-10",
+          "body_markdown": "にゃ、にゃあ…(しにそうな声で…)"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_markdown": "本件と関係ありそうな issue で、Open にはなってるけど、半年以上放置されてる。ここで使われている検証プログラムでは俺の手元で判明している問題は表現できないはず。\n\n[The text layout code is expecting the quantity of glyphs is equal to the cells allocated for each line · Issue #3546 · microsoft/terminal](https://github.com/microsoft/terminal/issues/3546)"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_markdown": "どうおかしくなるかを確認できるコードを Go で書いた。\n\n```go\npackage main\n\nimport (\n\t\"fmt\"\n)\n\nfunc main() {\n\tfmt.Printf(\"[%c][%c%c]\\n\", 0x908A, 0x908A, 0xE0104)\n\tfmt.Printf(\"[%c][%c%c\", 0x908A, 0x908A, 0xE0104)\n\tfmt.Printf(\"]\\n\")\n}\n```\n\n![](https://storage.googleapis.com/zenn-user-upload/7di2a08sd7cqlmavtmmowqf4trro)\n\n1回で行われていた出力APIのコールを2回に分けると、カーソル位置のズレが表面化する。\n\nただし、Go言語は Windows の API コールを内部でそれなりにラッピングしているので、WindowsTerminal 開発陣に不具合だとアピールするには、切り分け根拠としてはちょっと弱い。C++ とかで書き直せればよいのだが"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_markdown": "他の issue だと node.js による検証が許されているようだ。\n`scoop install nodejs` でインストール後、Windows Terminal を起動しなおしてから、node のコマンドラインで再試してみた。\n\n```js\n> process.stdout.write(\"[\\u908A\\u{E0104}]\\n\")\n[邊󠄄]\ntrue\n> process.stdout.write(\"[\\u908A\\u{E0104}\") ; process.stdout.write(\"]\\n\")\n[邊󠄄 ]\n> process.stdout.write(\"[ABCD\") ; process.stdout.write(\"]\\n\")\n[ABCD]\ntrue\n```\n\ntrue![](https://storage.googleapis.com/zenn-user-upload/j20xpnns5lpi83bk71zkz1w18bpg)"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_updated_at": "2021-01-10",
+      "body_markdown": "Windows Terminal のレポジトリに issue 立てた。すでに 1000も Open issue があるようなプロジェクトなので、速やかにいくはずがないが…。再現コードを node.js / golang 双方で書いたし、スクショもはったし、伝わることを祈る\n\n* [The cursor position looks to be incorrect after output IVS ( Ideographic Variation Sequence : U+E0100 to U+E01EF) · Issue #8731 · microsoft/terminal](https://github.com/microsoft/terminal/issues/8731)\n\n（外国の巨大OSSプロジェクトに issue たてるのは初めてである。外国人相手でも個人プロジェクトなら、なんぼか経験あるんだが…）",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2021-01-11",
+          "body_updated_at": "2021-01-11",
+          "body_markdown": "開発メンバーの人から [I think this is covered in #3546. The Unicode support is not complete yet.](https://github.com/microsoft/terminal/issues/8731#issuecomment-757533383) という回答が来た。\n\nまぁ、#3546 の存在は知ってはいたけれども、半年以上動きがないし、どうしたもんかなと思ってたんだよね。とりあえず、見た目玉アイコンで見たリアクションだけ入れておいた。まだトリアージされていないので、静観するしかないかな。やることはやった！\n\n自分としては「そんな問題はない」とリジェクトされなかったのであれば、御の字である。問題さえ理解しておいて貰えれば、別にクローズされてもよいし。"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-11",
+      "body_markdown": "なお、go-readline-ny に付属している unicodetest というテストツールで、0x908A+0xE0104 を内部的に4桁扱いにして、C-y ×数回 + C-a + C-f ×数回を実行すると、こんな感じに盛大に化ける。文字の途中にカーソルが移動してしまうせいかな\n\n![](https://storage.googleapis.com/zenn-user-upload/duxielt1iurxuoyzxjkn9dn0mo45)\n",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2021-01-11",
+          "body_markdown": "なお、このデモは nyagos 上で\n\n```\ngo get github.com/zetamatta/go-readline-ny\ncd ~/go/src/github.com/zetamatta/go-readline-ny\ngo build\ncd unicodetest\necho %U+908A%%U+E0104% | clip\n./unicodetest\n```\n\nで出来ます。ただし、現在はすでに回避コードが入っているので、文字化けまでは再現できなくなっています。"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-11",
+      "body_markdown": "0x908A+0xE0104 などの Variation Sequence を出力する際\n\nfmt.Fprintf(w, \"    \\x1B7\\b\\b\\b\\b%s\\x1B8\", string(s))\n\nと出力することで、力技で回避したｗｗｗ\n\n( ESC 7 はカーソル位置記憶、ESC 8 が記憶したカーソル位置に復帰するエスケープシーケンス）"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-11",
+      "body_markdown": "WindowsTerminal での異体字の文字幅の不具合については回避策が取れるようになったので、次の nyagos 4.4.9_3 で異体字の編集ができるようになります\n（ソースはコミット済み）\n\n![](https://storage.googleapis.com/zenn-user-upload/f2p85h5kfqxjilvimrfeir9gea2y)\n\n[On WindowsTerminal, output IVS(U+E0100 to U+E01EF) as is. · zetamatta/go-readline-ny@5af1253](https://github.com/zetamatta/go-readline-ny/commit/5af125377b99627be35a815cb9b00e2f0a5445be)"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-11",
+      "body_markdown": "本当は WindowsTerminal 側に立てた issue \n\n- [The cursor position looks to be incorrect after output IVS ( Ideographic Variation Sequence : U+E0100 to U+E01EF) · Issue #8731 · microsoft/terminal](https://github.com/microsoft/terminal/issues/8731)\n\nの推移を見届ける必要があるんですが、こっちはこっちで一応回避策が取れるようになったので、一旦、本スクラップはクローズしようと思います。\n\n**Unicodeとの異体字バトルが終わったぜ**\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-11",
+      "body_markdown": "ない、異体字セレクターの U+E0100 ～ U+E01EF ですが、Ctrl-Y ではペーストできるんですが、GUI操作のペースト（マウス右クリックからのペースト等）では通らないようです。これはどうしようもないです。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-12",
+      "body_markdown": "- [The cursor position looks to be incorrect after output IVS ( Ideographic Variation Sequence : U+E0100 to U+E01EF) · Issue #8731 · microsoft/terminal](https://github.com/microsoft/terminal/issues/8731)\n\nは重複ということで、クローズされたので、以後は \n\n- [The text layout code is expecting the quantity of glyphs is equal to the cells allocated for each line · Issue #3546 · microsoft/terminal](https://github.com/microsoft/terminal/issues/3546)\n\nをウォッチ。まぁ、当面、動きないでしょうけども"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-10",
+      "body_markdown": "WindowsTerminal 1.5 でも、まだ直ってない、ヨシ！？\n\n![](https://storage.googleapis.com/zenn-user-upload/hwe15979xs1w494mjk1vxo5mxs72)\n"
+    }
+  ]
+}

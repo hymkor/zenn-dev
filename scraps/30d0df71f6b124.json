@@ -1,0 +1,29 @@
+{
+  "title": "urfave/cli でグローバルオプションをコマンドオプションの場所に書きたい",
+  "closed": true,
+  "archived": false,
+  "created_at": "2020-12-24",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-24",
+      "body_updated_at": "2020-12-24",
+      "body_markdown": "[zetamatta/vo: Visual-studio client for command-line Operation](https://github.com/zetamatta/vo)という、Visual Studio のビルド機能をコマンドラインから使うツールを開発・利用している。たとえば、Visual Studio 2015 でビルドしたい時、\n\n```\nvo -2015 build\n```\n\nなんて感じにグローバルオプションを指定してすれば、Visual Studio 2015 の実行ファイル devenv.com を探し出して、カレントディレクトリにあるソリューションファイルをビルドしてくれる。だが、これを\n\n```\nvo build -2015\n```\n\nと指定するのもアリとしたい（というか、このように誤って書いてしまうから）。が、サブコマンドを実装するパッケージ [urfave/cli: A simple, fast, and fun package for building command line apps in Go](https://github.com/urfave/cli/)は、グローバルオプションとサブコマンド用オプションを別々に管理しているので、両方どっちでもいけるという指定は標準機能できないみたい。さて、どうするか…"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-24",
+      "body_markdown": "検証プログラム書いてみた。\n\n```go\npackage main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\n\t\"github.com/urfave/cli/v2\"\n)\n\nfunc main() {\n\tapp := &cli.App{\n\t\tUsage: \"Test for urfave/cli/v2\",\n\t\tFlags: []cli.Flag{\n\t\t\t&cli.BoolFlag{Name: \"x\", Usage: \"global x-option\"},\n\t\t},\n\t\tCommands: []*cli.Command{\n\t\t\t{\n\t\t\t\tName:  \"sub\",\n\t\t\t\tUsage: \"sub command\",\n\t\t\t\tFlags: []cli.Flag{\n\t\t\t\t\t&cli.BoolFlag{Name: \"x\", Usage: \"subcommands x-option\"},\n\t\t\t\t},\n\t\t\t\tAction: func(c *cli.Context) error {\n\t\t\t\t\tfmt.Printf(\"x-value=%v\\n\", c.Bool(\"x\"))\n\t\t\t\t\treturn nil\n\t\t\t\t},\n\t\t\t},\n\t\t},\n\t}\n\n\tapp.Run(os.Args)\n}\n```\n\n```\n$ foo sub\nx-value=false\n$ foo sub -x\nx-value=true\n$ foo -x sub\nx-value=false\n$ foo -x sub -x\nx-value=true\n```\n\nうーん、Bool の場合、サブコマンド側のオプションを省略しても、常に上書きされてしまうかー。そーかー。うーん、うまい逃げ道ないかなー"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-24",
+      "body_markdown": "Flag に Destination というフィールドがあった。\n\n```go\npackage main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\n\t\"github.com/urfave/cli/v2\"\n)\n\nfunc main() {\n\tglobalX := false\n\tcommandX := false\n\tapp := &cli.App{\n\t\tUsage: \"Test for urfave/cli/v2\",\n\t\tFlags: []cli.Flag{\n\t\t\t&cli.BoolFlag{\n\t\t\t\tName:        \"x\",\n\t\t\t\tUsage:       \"global x-option\",\n\t\t\t\tDestination: &globalX,\n\t\t\t},\n\t\t},\n\t\tCommands: []*cli.Command{\n\t\t\t{\n\t\t\t\tName:  \"sub\",\n\t\t\t\tUsage: \"sub command\",\n\t\t\t\tFlags: []cli.Flag{\n\t\t\t\t\t&cli.BoolFlag{\n\t\t\t\t\t\tName:        \"x\",\n\t\t\t\t\t\tUsage:       \"subcommands x-option\",\n\t\t\t\t\t\tDestination: &commandX,\n\t\t\t\t\t},\n\t\t\t\t},\n\t\t\t\tAction: func(c *cli.Context) error {\n\t\t\t\t\tfmt.Printf(\"x-value=%v\\n\", globalX || commandX)\n\t\t\t\t\treturn nil\n\t\t\t\t},\n\t\t\t},\n\t\t},\n\t}\n\n\tapp.Run(os.Args)\n}\n```\n\n```\n$ foo sub\nx-value=false\n$ foo sub -x\nx-value=true\n$ foo -x sub\nx-value=true\n$ foo -x sub -x\nx-value=true\n```\n\nまぁ、これでゆくかな？"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-25",
+      "body_markdown": "対応例：\n\nhttps://github.com/zetamatta/vo/commit/4b37b89e1e0217c073b51032ce685bae07265296"
+    }
+  ]
+}

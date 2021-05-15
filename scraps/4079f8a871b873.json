@@ -1,0 +1,55 @@
+{
+  "title": "こじらせたPGの小さなTips",
+  "closed": false,
+  "archived": false,
+  "created_at": "2021-02-17",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-17",
+      "body_markdown": "\nMicrosoft Teams で、Enter を押下して、投稿される呪いにかかった諸氏\n![](https://storage.googleapis.com/zenn-user-upload/9159ose62rsrr9nwnjex6jda9qz7)\nA ボタンを押して\n![](https://storage.googleapis.com/zenn-user-upload/enkstimawlqd0hviarrvnqnvtfg5)\nこの画面にすれば、Enter が改行になるぞ！",
+      "children": [
+        {
+          "author": "spiegel",
+          "created_at": "2021-02-17",
+          "body_markdown": "私もよくその呪いにかかります。改行入力をデフォルトにしてくれないですかねぇ。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-17",
+          "body_markdown": "それをデフォルトにする設定ほしいですよね…"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-18",
+      "body_markdown": "また、Microsoft Teams：\n\n音声会議の最中、耳がいたいからといって、Teams のデバイス設定で音声出力をヘッドセットからPCスピーカーに変えない方がよい。自分がしゃべる時になって戻しても戻らなくなる場合がある（こっちの声がすごく遠いと言われる）。耳が痛くても我慢せざるをえない。\nなお、音声会議中でなければ、ヘッドセットの抜き差しとかしても大丈夫"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "Windows10 にはいくつかのショートカットキーが追加されたが、以下がお気に入りだ。\n\n- Windowsキー + Shift + S … 範囲を選択して、スクリーンショットを撮る\n- Windowsキー ＋ ピリオド … 絵文字を入力\n\nIMEパッドとか、ウェブサイトの機能に頼らなくもいいのが、いいね"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-20",
+      "body_markdown": "markdown とか、twitter にリンクを張るために、次のようなブックマークレットを Chrome に登録している\n\n#### プレーンテキスト用\n```js\njavascript:(function(){var v=window.getSelection();prompt('',(v==''?'':'『'+v+'』\\n') + document.title + ' ' + window.location.href)}())\n```\n\n→ こんなテキストをPromptダイアログに表示する\n```\nこじらせたPGの小さなTips https://zenn.dev/zetamatta/scraps/4079f8a871b873\n```\n\n#### markdown用\n\n```js\njavascript:(function(){var v=window.getSelection();prompt('',(v==''?'':'『'+v+'』\\n')+'[' + document.title + '](' + window.location.href+')')}())\n```\n\n→ こんなテキストをPromptダイアログに表示する\n\n```\n[こじらせたPGの小さなTips](https://zenn.dev/zetamatta/scraps/4079f8a871b873)\n```"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-26",
+      "body_markdown": "バッチファイルでファイルを処理していると、①とか②とかいう文字が化けてしまう時がある。そんな時は…\n\n```batch\nchcp 65001\nfor /F \"tokens=2*\" %%I in ('git status -s ^| findstr /B \"??\" ^| sort /r') do call :del \"%%I\"\nchcp 932\n```\n\nとか、一時的にコードページを UTF8 に変えるしかないようだ\n（本当は現在のコードページを環境変数に読み込んで、それを復元すべきだが、まぁ、このバッチは社内のみでしか使わないからな…）\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-03-09",
+      "body_markdown": "コマンドラインから、コントロールパネルを起動させる\n\n    control\n\n「プログラムの追加と削除」を起動させる\n\n    appwiz.cpl\n\nappwiz.cpl については nyagos 上からは何故か直接実行できないので\n\n    cmd /c appwiz.cpl\n\nもしくは\n\n    explorer appwiz.cpl\n\nと呼び出す必要がある"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-03-20",
+      "body_markdown": "Teams のオンライン会議の背景の設定が分かりにくい。\n\n実際に会議に参加するまで設定できないように見えるが、**オンライン会議に参加する一歩手前の画面で設定できる**ようだ。なので「ひとり会議」を作成して、それに参加する直前で設定だけして終了する\n具体的には\n\n 1. カレンダーの「今すぐ会議」ボタン\n 2. 会議名を念の為「test」にして「会議を開始」\n 3. カメラをオンにして「背景フィルター」ボタンを押す\n\n実際の会議は 3. の画面「今すぐ参加」を押すまで始まらない。\n\nそれにしても何回「開始」を押させるねん！"
+    }
+  ]
+}

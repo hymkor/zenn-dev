@@ -1,0 +1,33 @@
+{
+  "title": "淡々とWindowsTerminalに対応してゆくスレ",
+  "closed": false,
+  "archived": false,
+  "created_at": "2021-05-05",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-05",
+      "body_markdown": "* [zetamatta/go-readline-ny: Readline library for golang , used in nyagos](https://github.com/zetamatta/go-readline-ny)\n  * Go言語による一行入力パッケージ\n* [Windows と Unicode とボク](https://zenn.dev/zetamatta/books/b820d588f4856bcf836c)\n  * Unicode &amp; WindowsTerminal についていろいろ書いてる"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-05",
+      "body_markdown": "https://twitter.com/h_okumura/status/1389409021875015680\n\nhttps://twitter.com/muota_here/status/1389470581104414722"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-05",
+      "body_markdown": "NYAGOS で U+20E5 が <20E5> 表示されるのはなんでやと思ったが、文字幅がゼロと定義されてるせいみたいだ。文字幅ゼロは１に置き換えた方がいいのかな…"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-05",
+      "body_markdown": "U+20E5 （&#x20E5;）を文字幅１とみなすようにしたが、カーソル位置がなんかずれる\n\n4回クリップボード経由でペーストしてみたが…\n![](https://storage.googleapis.com/zenn-user-upload/e9jkeofvr82zv79kyo0zv0uutyir)\n\n挙動がよくわからん。\n\n![](https://storage.googleapis.com/zenn-user-upload/oedri66c4yh7wbo99cz1z3mlwysk)\n\nWindowsTerminal の不具合で、APIの呼び出しを２回に分けると、カーソル位置の認識のズレが表面化するというのがたまにあるが、これの結果を見る限りはそうでもなさそう。\n\nZeroWidthJoin的な動作をしているのかなぁ…"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-05-05",
+      "body_markdown": "どうも、U+20E5 を連続して出力すると、出力分のセル分の空間内で１個だけがセンタリングされ表示されるという挙動の模様\n\n![](https://storage.googleapis.com/zenn-user-upload/b3u317fql4nva6uqa3uab3hzbfs6)\n\nなんじゃそりゃ。これは無理に対応せず、素直に <20E5> とか表示させておいた方が無難だなぁ"
+    }
+  ]
+}

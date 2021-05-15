@@ -1,0 +1,23 @@
+{
+  "title": "魂の叫び",
+  "closed": false,
+  "archived": false,
+  "created_at": "2021-04-20",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-20",
+      "body_markdown": ".NET 開発で、配列っぽいクラスを実装するなら、ちゃんと IEnumerable を実装してほしい。\nでないと、LINQ も For Each も使えない。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-20",
+      "body_markdown": "継承を勝手にする分にはよいが、既存のシングルトン的な巨大クラスの継承を要求するのはやめてくれ。\nフィールド変数が事実上グローバル変数だ。どの変数がどこからやってくるのか、IN/OUT が分かりづらくなるんだ。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-04-20",
+      "body_markdown": "Option Strict On を入れてくれ。そのうえで、Warning は全部つぶしてくれ…"
+    }
+  ]
+}

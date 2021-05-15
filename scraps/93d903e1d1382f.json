@@ -1,0 +1,173 @@
+{
+  "title": "nyagos が Ctrl-C で終了してしまう件",
+  "closed": true,
+  "archived": false,
+  "created_at": "2020-12-01",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-01",
+      "body_markdown": "- [Ctrl-C kills nyagos.exe itself when `more` runs without redirect · Issue #342 · zetamatta/nyagos](https://github.com/zetamatta/nyagos/issues/342)\n\nこれ、当初は more 実行中に Ctrl-C を押下すると落ちてしまうというケースを書いていたんだけど、その後、いろいろと知らなかった想定外終了ケースを報告していただいている。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-01",
+      "body_markdown": "Ctrl-C を効かなくするには二種類の方法がある\n\n1. SetConsoleMode で、ENABLE_PROCESSED_INPUT をオンだかオフだかする（どっちやねん）\n    - Ctrl-C を押下しても、SIGINT が送られなくなる\n    - プロセスではなくコンソールの設定をいじるので、自プロセスだけでなく子プロセスも Ctrl-C が効かなくなる。\n    - Windows 独自の設定なので、移植性がちょっと落ちる\n2. signal 関数で SIGINT を無視する感じにする\n\nnyagosは当初 1. の方を使っていて、これをやると落ちるなんてことは絶対なくなるんだけど、逆に子プロセスを kill できなくなるので、現在は 2. の方を採用している。ただし、SIGINT を完全に無視するんじゃなくて、SIGINT をキャッチしたら子プロセスを kill するというような動作をする goroutine を走らせている。",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-01",
+          "body_markdown": "> SIGINT をキャッチしたら子プロセスを kill する\n\nあ、厳密にいうと、\n- SIGINT をキャッチしたら、context.WithCancel を使って現在やっている処理にキャンセル処理を通知する（ shell/loop.go の (*Shell)Loop 関数内 ）\n- 外部プロセスの終了待ちをしている goroutine がキャンセルを検知すると、外部プロセスに kill する（ shell/interpret.go の (*Shell)startAndWaitProcess 関数内 )\n\nという動作をしています\n\n"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-01",
+          "body_markdown": "一つの可能性としては、signal.Notify （禁止）と signal.Stop （解除）が頻繁すぎて、そこにスキが出来ているというのもあるかもしれない\n"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-06",
+          "body_markdown": "- シェルの基本ループ (shell/Loop.go の (*Shell)Loop関数\n    - 一行入力 in \"go-readline-ny\"\n        - １文字キー入力( \"mattn/go-tty\" ) \n             -  (tty.*TTY)Raw()実行時にENABLE_PROCESSED_INPUT  がリセットされ、Raw()解除時に元に戻される\n             - この間、Ctrl-C で割り込み(SIGINT)自体が発生しない\n    - コマンド実行部 (shell/Interpreter.go) \n        - １文ごとに signal.Notify → コマンド実行 → signal.Stop を繰り返す\n        - siginal.Notify～Stopの間、SIGINT は context のキャンセルに解釈されなおす\n\n一行入力とコマンド実行部との遷移の間が割り込みを受け付ける隙になっている可能性が高い。signal 操作と go-tty は衝突しないので、ループの外側に  signal.Notify～Stop の範囲を広げてみるか  \n"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-07",
+          "body_markdown": "* [(#342) Add signal.Ignore(os.Interrpt) on the top level experimentally · zetamatta/nyagos@5af8404](https://github.com/zetamatta/nyagos/commit/5af840451730fc7401017a72dd874d114c87cb9d)\n\nトップレベルで、signal.Ignore(os.Interrpt) を入れてみました。多分、下位の signal.Notify/Stop や ENABLE_PROCESSED_INPUTのリセットと干渉しないので、これで直るはず…\n\nこの修正は \"frame\" というサブパッケージでやってますが、これは何かというと main から数えて呼び出し階層の２番目くらいにあるサブパッケージです。\n\n- main - 形式だけのトップレベル（frameとmainsを呼ぶだけ）\n    - **frame - Lua に依存しない部分の初期化処理と終了処理を担う**\n        - mains - Lua に依存する部分の初期化処理と終了処理とメインルーチン\n            - shell - シェルのメインルーチン(loop.go)とコマンドインタープリタ(interpreter.go)\n            - \"go-readline-ny\" - 一行入力のパッケージ（元々はサブパッケージだったが独立させた）\n\n複雑な階層構造になってますが、これは Lua に依存する箇所を mains だけに限定したかったためです。これをしなければ、lua53.dll → GopherLua へのスムーズな切り替えが出来なかったと思います。\n"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-07",
+          "body_markdown": "直っていない。\n\n```\nstart nyagos.exe\nmore\n[Ctrl-C]\n```\n\nで、ターミナルがクローズしてしまう。別のウインドウなので、親の nyagos が kill しているわけではない"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-08",
+          "body_updated_at": "2020-12-08",
+          "body_markdown": "more を実行する時に一時的に ENABLE_PROCESSED_INPUT をリセットして、Ctrl-C を押されても割り込みが発生しないようにした。\n\n- [(#342) Disable Ctrl-C while more is running · zetamatta/nyagos@51131a4](https://github.com/zetamatta/nyagos/commit/51131a4351d7b277d2dc54c2c940c1392ab5a68f)\n\nが、そうすると、キーボード入力の Enter が LF のない CR だけになってしまって、ずっと同じ行で入力し続ける形になっておかしい！\n（が、落ちるよりマシなので、とりあえず commit してる。しかし、コレ、どうすりゃいいんだ？）"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-01",
+      "body_markdown": "- [Windows Terminal などで Ctrl+C が[プロセスはコード 3221225786 で終了しました]になるときの対処法 - Qiita](https://qiita.com/mkizka/items/5d77efb1c801a8d06fa2)\n    - via https://github.com/zetamatta/nyagos/issues/342#issuecomment-728186943\n\n\n>Windows Terminal や VSCode などでターミナルを開くとき、pwsh や nyagos の中で時間のかかる処理をCtrl+Cするとターミナルのプロセスごと落ちてしまうときがある\n>\n> 対処法\n> scoop/shimsではなくscoop/apps以下の .exe を指定する",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-01",
+          "body_markdown": "scoop/shims 以下にある実行ファイルは、scoop/apps 以下にある本物の EXE ファイルを呼ぶためのブースター。下記がソースだが、ぱっと見、子プロセスを kill するようなコードは見受けられない。プロセスツリーのトップが殺されたら連鎖的に子供も殺されるような仕組みでもあるのかなぁ\n\nhttps://github.com/lukesampson/scoop/blob/master/supporting/shimexe/shim.cs"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-02",
+          "body_markdown": "zenn.dev の Book 「scoop / nyagos で始めるコマンドライン生活」が ~\\scoop/apps/nyagos.exe を使うような記載になっていたのを、~\\scoop\\apps\\nyagos\\current\\nyagos.exe を指定するよう修正した。\n\n- [「nyagos」のインストール](https://zenn.dev/zetamatta/books/5ac80a9ddb35fef9a146/viewer/596ba4)\n- [Windows Terminal で nyagos を使おう](https://zenn.dev/zetamatta/books/5ac80a9ddb35fef9a146/viewer/a3f5c9)\n\nこの記事が迷える人を増やす要因になっていた。もっと早く修正すべきだった。**判断が遅い！**\n\n"
+        },
+        {
+          "author": "spiegel",
+          "created_at": "2020-12-03",
+          "body_markdown": "あー。うちの記事でも当時のサンプルコードをそのまま載せてました。直さなきゃ\n\nhttps://text.baldanders.info/remark/2020/10/windows-terminal-and-nyagos-and-scoop/"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-03",
+      "body_markdown": "clone コマンドで、新ターミナルを起動し、プロンプトが出るか出ないかするタイミングで Ctrl-C を押下したら落ちた！"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-08",
+      "body_markdown": "[ASCII.jp：Go言語で知るプロセス（3）](https://ascii.jp/elem/000/001/467/1467705/)\n\n> signal.Stop(signals)\nこれを呼び出すと、それ以降Notify()で指定したシグナルを受け取らなくなるわけではなく、デフォルトに戻るようです。 Notify()でSIGINT（Ctrl + C）を指定していた場合、呼び出し後はブロックせずにデフォルトでプロセスを終了するようになります\n\nな、なんだと…\n（でも、Stop の後、ほとんど間もなく、readline(go-tty) 中で SetConsoleMode( ENABLE_PROCESSED_INPUT のリセット) とかしているので、これがすべての根源とも言い切れない。\nが、対処しておく必要はあるだろう。\n\n// 余談だが、context でキャンセルさせるようにしてから、Ctrl-C の面倒事が増えてきたような気がする。まぁ、context がなかった当時は内蔵 more もなかったけど"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-11",
+      "body_markdown": "Ctrl-C 関連を改造中の nyagos にて\n\n```\n$ more\nf\nf\nd\nd\nw\nw\n<DESKTOP-LGGUCRA:~/go/src/github.com/zetamatta/nyagos>\n$\n<DESKTOP-LGGUCRA:~/go/src/github.com/zetamatta/nyagos>\n$ s\nC:\\Users\\hymko\\go\\src\\github.com\\zetamatta\\nyagos\\nyagos.d\\brace.lua:8: context canceled\nstack traceback:\n        C:\\Users\\hymko\\go\\src\\github.com\\zetamatta\\nyagos\\nyagos.d\\brace.lua:8: in main chunk\n        [G]: ?\n```\n\nmore の中で Ctrl-C で止めると… 時間差で Cancel される。\n\n（brace.lua というのは、A{B,C}D を ABD ACD へ変換するコマンドラインフィルターの Lua で、それが context.WithCancel の cancel で止められてる。なんでや！\n\nもうかなり行き詰まってる"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-13",
+      "body_markdown": "あー、context.WithCancel の .Done() と signal のチャネルを同じ場所で拾わせるという手があるのか\n\n* [hawksnowlog: Context + os/signal でバックグランド処理を強制的に終了させる](https://hawksnowlog.blogspot.com/2019/02/handle-signals-with-context.html)\n\n```\n    signal.Notify(c,\n        syscall.SIGINT,\n        os.Interrupt)\n```\n\n```\n go func() {\n        select {\n        case <-c:\n            // シグナルをキャッチ\n            fmt.Println(\"signal\")\n            // robot() を終了させる\n            cancel()\n        case <-ctx.Done():\n            // cancel() コール時に呼ばれる、ただしシグナルをキャッチした際の cancel() ではここは通らない\n            debug()\n            fmt.Println(\"ctx.Done()\")\n        }\n    }()\n```\n\nなるほど",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_markdown": "お、これがベストソリューションだったかも！？"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_markdown": "これが決定版かもしれぬ。more の中で Ctrl-C を押しても、more だけが止まって、その後に引きずらないようになった。\n\n* [(#342) more: stop with Ctrl-C with not SetConsoleMode but signal · zetamatta/nyagos@af54fda](https://github.com/zetamatta/nyagos/commit/af54fda21c07850e34b61274351f9e38c47931df)\n\nただし、signal.Notify～signal.Stop の範囲がまだ狭いので\n\n* [Ctrl-C kills nyagos.exe itself when `more` runs without redirect · Issue #342 · zetamatta/nyagos](https://github.com/zetamatta/nyagos/issues/342)\n\nで追加報告いただいている事象がこれでは治らない可能性が高い。\nsignal.Notify～signal.Stopの範囲の見直しする必要がありそうだ。"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-13",
+      "body_markdown": "> signal.Notify～signal.Stopの範囲の見直しする必要がありそうだ。\n\nsignal.Notify の後、signal.Stop をすると、Ctrl-C でのプロセス終了状態に戻ってしまうという記事があった。では、signal.Notify の入れ子はどうすればよいのか。検証してみよう",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_markdown": "単純に channel をクローズしてはどうか？\n\n```go\npackage main\n\nimport (\n\t\"time\"\n\t\"os/signal\"\n\t\"os\"\n)\n\nfunc main(){\n\tc1 := make(chan os.Signal,1)\n\tc2 := make(chan os.Signal,1)\n\n\tgo func(){\n\t\tfor _ = range c1{\n\t\t\tprintln(\"first signal\")\n\t\t}\n\t}()\n\n\tgo func(){\n\t\tfor _ = range c2{\n\t\t\tprintln(\"second signal\")\n\t\t}\n\t}()\n\n\tsignal.Notify(c1,os.Interrupt)\n\tsignal.Notify(c2,os.Interrupt)\n\n\tprintln(\"Type Ctrl-C in 10 seconds\")\n\ttime.Sleep(time.Second*10)\n\n\tclose(c1)\n\n\tprintln(\"Type Ctrl-C in 10 seconds\")\n\ttime.Sleep(time.Second*10)\n\n\tclose(c2)\n}\n```\n\n```\n$ signalnotify.exe\nType Ctrl-C in 10 seconds\nfirst signal\nsecond signal\nType Ctrl-C in 10 seconds\npanic: send on closed channel\n\ngoroutine 8 [running]:\nos/signal.process(0x64ae00, 0x697710)\n        C:/go/src/os/signal/signal.go:244 +0x17f\nos/signal.loop()\n        C:/go/src/os/signal/signal_unix.go:23 +0x45\ncreated by os/signal.Notify.func1.1\n        C:/go/src/os/signal/signal.go:150 +0x4b\n```\n\nダメに決まってるだろ！"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_markdown": "close ではなく、普通に signal.Stop を使ってみた。\n\n```go\n\tsignal.Notify(c1,os.Interrupt)\n\tsignal.Notify(c2,os.Interrupt)\n\n\tprintln(\"Type Ctrl-C in 10 seconds\")\n\ttime.Sleep(time.Second*10)\n\n\tsignal.Stop(c2)\n\n\tprintln(\"Type Ctrl-C in 10 seconds\")\n\ttime.Sleep(time.Second*10)\n\tsignal.Stop(c1)\n\tprintln(\"All done\")\n```\n\n```\n$ signalnotify.exe\nType Ctrl-C in 10 seconds\nsecond signal\nfirst signal\nType Ctrl-C in 10 seconds\nfirst signal\nAll done\n```\n\n普通に行けた。signal.Notify は多重に機能する。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_updated_at": "2020-12-13",
+          "body_markdown": "さて、全部の signal.Notify を解除した時の挙動は、何もしなかった時の状況に戻るわけだが、その時の挙動はどうか？\n\n```go\n\tsignal.Notify(c1,os.Interrupt)\n\tsignal.Notify(c2,os.Interrupt)\n\n\tprintln(\"Type Ctrl-C in 5 seconds\")\n\ttime.Sleep(time.Second*5)\n\n\tsignal.Stop(c2)\n\n\tprintln(\"Type Ctrl-C in 5 seconds\")\n\ttime.Sleep(time.Second*5)\n\tsignal.Stop(c1)\n\n\tprintln(\"Type Ctrl-C in 5 seconds\")\n\ttime.Sleep(time.Second*5)\n\n\tprintln(\"All done\")\n```\n\n```\n$ signalnotify.exe\nType Ctrl-C in 5 seconds\nsecond signal\nfirst signal\nType Ctrl-C in 5 seconds\nfirst signal\nType Ctrl-C in 5 seconds\n```\n\n3回 Ctrl-C を押下した時、Notify をすべて解除した時はプロセスが殺されている（ `All done` が表示されない )。"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_updated_at": "2020-12-13",
+          "body_markdown": "では、最初に signal.Ignore を設定してはどうか？\n\n```go\n\tsignal.Ignore(os.Interrupt)\n\tsignal.Notify(c1, os.Interrupt)\n\tsignal.Notify(c2, os.Interrupt)\n\n\tprintln(\"Type Ctrl-C in 5 seconds\")\n\ttime.Sleep(time.Second * 5)\n\n\tsignal.Stop(c2)\n\n\tprintln(\"Type Ctrl-C in 5 seconds\")\n\ttime.Sleep(time.Second * 5)\n\tsignal.Stop(c1)\n\n\tprintln(\"Type Ctrl-C in 5 seconds\")\n\ttime.Sleep(time.Second * 5)\n\n\tprintln(\"All done\")\n```\n\n```\n$ signalnotify.exe\nType Ctrl-C in 5 seconds\nsecond signal\nfirst signal\nType Ctrl-C in 5 seconds\nfirst signal\nType Ctrl-C in 5 seconds\n\n```\n\nうん、ダメっぽい！"
+        },
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-13",
+          "body_markdown": "signal.Notify が一つでも残っていれば Ctrl-C で強制停止されないわけだから、まぁ、大丈夫と見てよいかな…\n\n（一つも signal.Notify が設定されていない状態というのは、シェルのメイン処理ループ外にいるということなので。そういうタイミングはほとんどない）\n\n処理しない signal.Notify を用意してもいいけど、そちらの channel が Ctrl-C で満タンになると panic になるので、消し込むためだけの goroutine が必要になって、もったいない。"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-13",
+      "body_markdown": "> 対処法\n> scoop/shimsではなくscoop/apps以下の .exe を指定する\n\nこれをやらなくても、落ちなくならなくなっているだろうか？",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-14",
+          "body_markdown": "いけてそうな感じではあるけれども、疑似テスト（自分で、~/scoop/app/nyagos/4.4.8_0/nyagos を差し替えた）結果なので、まぁ、直ったとは断言できぬ状況"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-19",
+      "body_markdown": "落ちなくはなったけど、more がエコーバックしないという問題がまだ残っていた。\n\nどうも、more を実行する前に ls を実行していたりすると、SetConsoleMode がエラー終了していることが分かった。成功する時は\n> windows.SetConsoleMode(標準入力のコンソールハンドル,0x7)\n\nとなっているが、失敗する時は次のようになっていた。\n> windows.SetConsoleMode(標準入力のコンソールハンドル,0x5)\n\nなので今まで UNIX の Cocked Mode 相当に遷移する際：\n- 0x1 = ENABLE_PROCESSED_INPUT\n- 0x4 = ENABLE_ECHO_INPUT \n\nだけを明示的にセットしていたのを\n- 0x2 = ENABLE_LINE_INPUT\n\nも合わせてセットしなければいけない（組み合わせ上認められない）ということになりそうだ。\n\n\n"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2020-12-19",
+      "body_markdown": "more がエコーバックしないという問題は、前述の方法で解決した。\nだが、２回目以降の more で、なぜか先頭行にいきなり空行が入ってしまうという問題が…なぜ？",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2020-12-20",
+          "body_markdown": "こちらについては [[Go]os.StdinのEOFの後に改行が必ず入ってきてしまう件](https://zenn.dev/zetamatta/scraps/a23365bad9c86a) にて検討します。  \n（more がエコーバックしない件も別にすればよかった…）"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-01-10",
+      "body_markdown": "詳しくは [Ctrl-C kills nyagos.exe itself when `more` runs without redirect · Issue #342 · zetamatta/nyagos](https://github.com/zetamatta/nyagos/issues/342#issuecomment-744437648) 以下に書きましたが\n\n- context.WithCancel の .Done() と signal のチャネルを同じ場所で拾わせる\n- signal.Notify ～ signal.Stop の範囲を見直し（シグナルを拾い損ねる隙をなくす）\n- context.WithCancel のキャンセルが来ても、外部プロセスを kill させず、ターミナルからの各プロセスへの sigint の送信に任せる\n\nようにしたところ、Ctrl-C まわりの諸問題は一応解決したようです。これらの対応は[nyagos 4.4.9_2](https://github.com/zetamatta/nyagos/releases/tag/4.4.9_2) に反映されています。\n\n本スクラップはこれにてクローズしたいと思います。ありがとうございました。"
+    }
+  ]
+}

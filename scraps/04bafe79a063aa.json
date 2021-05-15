@@ -1,0 +1,47 @@
+{
+  "title": "俺たちの戦いはこれからだ（zetamatta's Book 読者コミュニティー）",
+  "closed": false,
+  "archived": false,
+  "created_at": "2021-02-07",
+  "comments": [
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-07",
+      "body_markdown": "本の感想や質問をお気軽にコメントしてください。"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-09",
+      "body_markdown": "さっそくですが、WindowsTerminal 1.4→1.5 のバージョンアップで、U+2000～U+2FFF 以外にも、KeyDown が届かないコードが登場しました。現在、以下のスクラップで格闘中\n\n- [合字ふたたび？](https://zenn.dev/zetamatta/scraps/c735949deaa6fb)",
+      "children": [
+        {
+          "author": "zetamatta",
+          "created_at": "2021-02-14",
+          "body_markdown": "とりあえず、一旦解決し、go-readline-ny v0.4.2 では普通に MAN FARMER もマウスの右クリックで入力できるようになっているので、スクラップはクローズしました。"
+        }
+      ]
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-27",
+      "body_markdown": "- [Unicode 絵文字にまつわるあれこれ (絵文字の標準とプログラム上でのハンドリング) - Qiita](https://qiita.com/_sobataro/items/47989ee4b573e0c2adfc)\n    - これは参考になる。\n- [src/unicode/tables.go - The Go Programming Language](https://golang.org/src/unicode/tables.go)\n    - Go言語標準の Unicode テーブル"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-28",
+      "body_updated_at": "2021-03-08",
+      "body_markdown": "### 囲み数字：U+0023/U+FE0F/U+20E3 ( &#x23;&#xFE0F;&#x20E3; )\n\n [おそるべき絵文字](https://zenn.dev/spiegel/scraps/ade6bca6e3a48e)で言及されてたやつ。go-readline-ny v0.2.6 にて対応した。\n\nWindowsTerminal での表示は本来「#□」みたいになるが、go-readline では「#<20E3>」みたいになっていた。せめて「#□」のままちゃんと編集できるようにした。\n\nこの文字の変態性は「ただの半角文字（#）」＋「異体字セレクタ15」＋「囲み文字□」というコンボな点。囲み文字は異体字セレクタと同じ扱い（型）にすればよかったのだが、問題は異体字セレクタ的処理が二重になるという点。\n\nこれは `type VariationSequence string` としていたのを `type VariationSequence [2]Moji`と変えることで解決した。つまり、何重にでも入れ子にできるわけですわ。\n\n囲み文字を異体字セレクタと同じ扱いにするのは簡単で\n\n```go\nreturn unicode.Is(unicode.Variation_Selector, ch)\n```\n\nとしていたのを\n\n```go\nreturn unicode.Is(unicode.Variation_Selector, ch) || unicode.Is(unicode.Me, ch)\n```\n\nとしただけ"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-28",
+      "body_markdown": "### ひたいに手をあてる女性の異体字15：U+1F926/U+200D/U+2640/U+FE0F (🤦‍♀️)\n\n- Windows だと、Windowsキー＋ピリオドで入力できる。\n- WindowsTerminal だと「&#x1F926; &#x2640;」という二文字表示になる。\n- go-readline-ny では「&#x1F926; &#x2640;<FE0F>」とか出てしまっていた。\n\nこれ、驚くべきは\n\n- 異体字セレクタ(U+FE0F)が ReadConsoleInput 経由で読み込まれていた\n- 合字＋異体字シーケンスのコンボ\n\nという２点。前者については Ctrl-Y 以外の異体字セレクタ読み込みにも素直に対応するようにした。後者については異体字シーケンスの構造を入れ子にできるようにすることで対応した。\n（異体字シーケンスの構造を入れ子は、v0.2.6 でやったみたいに書いてたけど、実は本件の修正(v0.2.5) でやってた修正だった）"
+    },
+    {
+      "author": "zetamatta",
+      "created_at": "2021-02-28",
+      "body_updated_at": "2021-02-28",
+      "body_markdown": "### 他の文字の前に合字を挿入した時に、文字幅計算計算が狂う\n\ngo-readline-ny v0.4.4 にて Fix。一部の文字幅計算関数(readline.GetStringWidth)が、合字処理に対応出来てなかったという…あちゃあ案件。同じことをする関数を複数用意してると、こういうことになる。\n\nいずれ統一せんといかんなぁ（readline.GetStringWidthはいずれ廃止するが、今はまだ存続）"
+    }
+  ]
+}
