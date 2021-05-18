@@ -7,7 +7,7 @@ rem **** update top readme.md ****
   echo =========
   echo.) > readme.md
 
-for %%I in (articles\*.md) do goawk -v "fname=%%I" "BEGIN{ gsub(/\\/,'\/',fname) } { gsub(/\x22/,'') } match($0,/title: /){ printf '* [%%s](%%s)\n',substr($0,RSTART+RLENGTH),fname}" %%I >> readme.md
+goawk "FNR==1{ fname=FILENAME ; gsub(/\\/,'\/',fname) } { gsub(/\x22/,'') } match($0,/title: /){ printf '* [%%s](%%s)\n',substr($0,RSTART+RLENGTH),fname}" articles\*.md >> readme.md
 
 ( echo.
   echo Books
