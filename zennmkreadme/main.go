@@ -2,105 +2,73 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
+	"io"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
-	"strconv"
-
-	"gopkg.in/yaml.v2"
+	"strings"
 )
 
-type YamlWithTitle struct {
-	Title string `yaml:"title"`
+func grepTitle(fname string) (string, error) {
+	fd, err := os.Open(fname)
+	if err != nil {
+		return "", err
+	}
+	defer fd.Close()
+
+	sc := bufio.NewScanner(fd)
+	for sc.Scan() {
+		line := sc.Text()
+		const header = "title: "
+		if strings.HasPrefix(line, header) {
+			return strings.Trim(line[len(header):], " \"\r\n"), nil
+		}
+	}
+	return "", io.EOF
 }
 
 var rxPagePattern = regexp.MustCompile(`^(\d+)\..*\.md$`)
 
-func readMdFileHeader(name string) (*YamlWithTitle, error) {
-	fd, err := os.Open(name)
-	if err != nil {
-		return nil, err
-	}
-	defer fd.Close()
-
-	var yamlBuf bytes.Buffer
-
-	hrCount := 0
-	sc := bufio.NewScanner(fd)
-	for sc.Scan() {
-		line := sc.Text()
-		if line == "---" {
-			hrCount++
-			if hrCount >= 2 {
-				break
-			}
-		} else if hrCount == 1 {
-			yamlBuf.WriteString(line)
-			yamlBuf.WriteString("\n")
+func atoi(s string) int {
+	n := 0
+	for len(s) > 0 {
+		i := strings.IndexByte("0123456789", s[0])
+		if i < 0 {
+			break
 		}
+		n = n*10 + i
+		s = s[1:]
 	}
-	y := &YamlWithTitle{}
-	err = yaml.Unmarshal(yamlBuf.Bytes(), y)
-	return y, err
+	return n
 }
 
-type Chapter struct {
-	Index    int
-	Title    string
-	Filename string
-}
-
-func mkreadme(dir string) (string, []Chapter, error) {
-	fd, err := os.Open(dir)
-	if err != nil {
-		return "", nil, err
-	}
-	defer fd.Close()
-
-	dirs, err := fd.ReadDir(-1)
+func mkreadme(dir string) (string, [][2]string, error) {
+	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return "", nil, err
 	}
 
 	var bookTitle string
-	result := make([]Chapter, 0, 20)
-	for _, dir1 := range dirs {
-		name := dir1.Name()
+	result := make([][2]string, 0, len(entries))
+	for _, entry := range entries {
+		name := entry.Name()
+		thePath := filepath.Join(dir, name)
 
 		if name == "config.yaml" {
-			configYamlBin, err := os.ReadFile(name)
-			if err != nil {
-				return "", nil, err
+			if title, err := grepTitle(thePath); err == nil {
+				bookTitle = title
 			}
-			configYaml := &YamlWithTitle{}
-			err = yaml.Unmarshal(configYamlBin, configYaml)
-			if err != nil {
-				return "", nil, err
+		} else if m := rxPagePattern.FindStringSubmatch(name); m != nil {
+			if title, err := grepTitle(thePath); err == nil {
+				result = append(result, [2]string{
+					title, filepath.ToSlash(name)})
 			}
-			bookTitle = configYaml.Title
-			continue
 		}
-		m := rxPagePattern.FindStringSubmatch(name)
-		if m == nil {
-			continue
-		}
-		y, err := readMdFileHeader(name)
-		if err != nil {
-			return "", nil, err
-		}
-		index, err := strconv.Atoi(m[1])
-		if err != nil {
-			return "", nil, err
-		}
-		result = append(result, Chapter{Index: index, Title: y.Title, Filename: name})
 	}
 	sort.Slice(result, func(i, j int) bool {
-		if result[i].Index != result[j].Index {
-			return result[i].Index < result[j].Index
-		}
-		return result[i].Filename < result[j].Filename
+		return atoi(result[i][1]) < atoi(result[j][1])
 	})
 	return bookTitle, result, nil
 }
@@ -114,7 +82,7 @@ func mains() error {
 	fmt.Println("==============")
 	fmt.Println()
 	for i, c := range pages {
-		fmt.Printf("%d. [%s](./%s)\n", i+1, c.Title, c.Filename)
+		fmt.Printf("%d. [%s](./%s)\n", i+1, c[0], c[1])
 	}
 	fmt.Println()
 	fmt.Println("![cover](./cover.jpg)")
