@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -44,14 +45,27 @@ func atoi(s string) int {
 	return n
 }
 
-func mkreadme(dir string) (string, [][2]string, error) {
+// Link contains title and url.
+type Link struct {
+	Title    string
+	URL      string
+	filename string // for sort
+}
+
+// Book contains its title and chapters.
+type Book struct {
+	Title   string
+	Chapter []*Link
+}
+
+func readBook(dir string) (*Book, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
-		return "", nil, err
+		return nil, err
 	}
 
 	var bookTitle string
-	result := make([][2]string, 0, len(entries))
+	chapters := make([]*Link, 0, len(entries))
 	for _, entry := range entries {
 		name := entry.Name()
 		thePath := filepath.Join(dir, name)
@@ -62,35 +76,62 @@ func mkreadme(dir string) (string, [][2]string, error) {
 			}
 		} else if m := rxPagePattern.FindStringSubmatch(name); m != nil {
 			if title, err := grepTitle(thePath); err == nil {
-				result = append(result, [2]string{
-					title, filepath.ToSlash(name)})
+				chapters = append(chapters, &Link{
+					Title:    title,
+					URL:      filepath.ToSlash(thePath),
+					filename: name})
 			}
 		}
 	}
-	sort.Slice(result, func(i, j int) bool {
-		return atoi(result[i][1]) < atoi(result[j][1])
+	sort.Slice(chapters, func(i, j int) bool {
+		return atoi(chapters[i].filename) < atoi(chapters[j].filename)
 	})
-	return bookTitle, result, nil
+	return &Book{Title: bookTitle, Chapter: chapters}, nil
 }
 
-func mains() error {
-	title, pages, err := mkreadme(".")
-	if err != nil {
-		return err
+func (b *Book) dump(w io.Writer) {
+	fmt.Fprintln(w, b.Title)
+	fmt.Fprintln(w, "==============")
+	fmt.Fprintln(w)
+	for i, c := range b.Chapter {
+		fmt.Fprintf(w, "%d. [%s](./%s)\n", i+1, c.Title, c.URL)
 	}
-	fmt.Println(title)
-	fmt.Println("==============")
-	fmt.Println()
-	for i, c := range pages {
-		fmt.Printf("%d. [%s](./%s)\n", i+1, c[0], c[1])
+	fmt.Fprintln(w)
+	fmt.Fprintln(w, "![cover](./cover.jpg)")
+}
+
+var flagOutput = flag.String("o", "", "output table of contents to")
+
+func mains(args []string) error {
+	var tableWriter io.Writer = os.Stdout
+	if *flagOutput != "" {
+		w, err := os.Create(*flagOutput)
+		if err != nil {
+			return err
+		}
+		defer w.Close()
+		tableWriter = w
 	}
-	fmt.Println()
-	fmt.Println("![cover](./cover.jpg)")
+	if len(args) <= 0 {
+		b, err := readBook(".")
+		if err != nil {
+			return err
+		}
+		b.dump(tableWriter)
+	}
+	for _, dir := range args {
+		b, err := readBook(dir)
+		if err != nil {
+			return err
+		}
+		b.dump(tableWriter)
+	}
 	return nil
 }
 
 func main() {
-	if err := mains(); err != nil {
+	flag.Parse()
+	if err := mains(flag.Args()); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
