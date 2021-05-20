@@ -114,12 +114,15 @@ func mains() error {
 		if err != nil {
 			return err
 		}
-		fd, err := os.Create(filepath.Join("./books", bookDir1.Name()+".md"))
+		bookIndexPath := filepath.Join("./books", bookDir1.Name()+".md")
+		fd, err := os.Create(bookIndexPath)
 		if err != nil {
 			return err
 		}
 		b.dump(fd)
 		fd.Close()
+
+		fmt.Printf("* [%s](%s)\n", b.Title, filepath.ToSlash(bookIndexPath))
 	}
 	return nil
 }

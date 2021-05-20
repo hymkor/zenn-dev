@@ -14,9 +14,7 @@ goawk "FNR==1{ fname=FILENAME ; gsub(/\\/,'\/',fname) } { gsub(/\x22/,'') } matc
   echo ======
   echo.) >> readme.md
 
-"%~dp0\zennmkreadme\zennmkreadme.exe"
-
-goawk "FNR==1 { fname=FILENAME; gsub(/\\/,'/',fname) ; printf '* [%%s](%%s)\n',$0,fname }" books\*.md >> readme.md
+"%~dp0\zennmkreadme\zennmkreadme.exe" >> readme.md
 
 endlocal
 exit /b
