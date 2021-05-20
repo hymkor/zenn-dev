@@ -102,6 +102,27 @@ func (b *Book) dump(w io.Writer) {
 }
 
 func mains() error {
+	fmt.Print("Articles\n=========\n\n")
+
+	articles, err := os.ReadDir("./articles")
+	if err != nil {
+		return err
+	}
+	for _, article := range articles {
+		name := article.Name()
+		if article.IsDir() || filepath.Ext(name) != ".md" {
+			continue
+		}
+		thePath := filepath.Join("articles", name)
+		title, err := grepTitle(thePath)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("* [%s](articles/%s)\n", title, name)
+	}
+
+	fmt.Print("\nBooks\n======\n\n")
+
 	books, err := os.ReadDir("./books")
 	if err != nil {
 		return err
