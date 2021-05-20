@@ -14,16 +14,9 @@ goawk "FNR==1{ fname=FILENAME ; gsub(/\\/,'\/',fname) } { gsub(/\x22/,'') } matc
   echo ======
   echo.) >> readme.md
 
-for /D %%I in (books\*) do goawk -v "dir=%%I" "BEGIN{ gsub(/\\/,'\/',dir) } { gsub(/\x22/,'') } match($0,/title: /){ printf '* [%%s](%%s/readme.md)\n',substr($0,RSTART+RLENGTH),dir}" %%I\config.yaml >> readme.md
+"%~dp0\zennmkreadme\zennmkreadme.exe"
 
-rem ***** update books/readme.md ****
+goawk "FNR==1 { fname=FILENAME; gsub(/\\/,'/',fname) ; printf '* [%%s](%%s)\n',$0,fname }" books\*.md >> readme.md
 
-for /D %%I in (books\*) do call :dir1 "%%I"
 endlocal
 exit /b
-
-:dir1
-    pushd "%~1"
-    "%~dp0\zennmkreadme\zennmkreadme.exe" > readme.md
-    popd
-    exit /b
