@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -54,11 +53,12 @@ type Link struct {
 
 // Book contains its title and chapters.
 type Book struct {
-	Title   string
-	Chapter []*Link
+	Title      string
+	Chapter    []*Link
+	urlBaseDir string
 }
 
-func readBook(dir string) (*Book, error) {
+func readBook(dir string, urlBaseDir string) (*Book, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
@@ -78,7 +78,7 @@ func readBook(dir string) (*Book, error) {
 			if title, err := grepTitle(thePath); err == nil {
 				chapters = append(chapters, &Link{
 					Title:    title,
-					URL:      filepath.ToSlash(thePath),
+					URL:      filepath.ToSlash(filepath.Join(urlBaseDir, name)),
 					filename: name})
 			}
 		}
@@ -86,7 +86,7 @@ func readBook(dir string) (*Book, error) {
 	sort.Slice(chapters, func(i, j int) bool {
 		return atoi(chapters[i].filename) < atoi(chapters[j].filename)
 	})
-	return &Book{Title: bookTitle, Chapter: chapters}, nil
+	return &Book{Title: bookTitle, Chapter: chapters, urlBaseDir: urlBaseDir}, nil
 }
 
 func (b *Book) dump(w io.Writer) {
@@ -94,44 +94,38 @@ func (b *Book) dump(w io.Writer) {
 	fmt.Fprintln(w, "==============")
 	fmt.Fprintln(w)
 	for i, c := range b.Chapter {
-		fmt.Fprintf(w, "%d. [%s](./%s)\n", i+1, c.Title, c.URL)
+		fmt.Fprintf(w, "%d. [%s](%s)\n", i+1, c.Title, c.URL)
 	}
 	fmt.Fprintln(w)
-	fmt.Fprintln(w, "![cover](./cover.jpg)")
+	fmt.Fprintf(w, "![cover](%s)\n",
+		filepath.ToSlash(filepath.Join(b.urlBaseDir, "cover.jpg")))
 }
 
-var flagOutput = flag.String("o", "", "output table of contents to")
-
-func mains(args []string) error {
-	var tableWriter io.Writer = os.Stdout
-	if *flagOutput != "" {
-		w, err := os.Create(*flagOutput)
-		if err != nil {
-			return err
-		}
-		defer w.Close()
-		tableWriter = w
+func mains() error {
+	books, err := os.ReadDir("./books")
+	if err != nil {
+		return err
 	}
-	if len(args) <= 0 {
-		b, err := readBook(".")
+	for _, bookDir1 := range books {
+		if !bookDir1.IsDir() {
+			continue
+		}
+		b, err := readBook(filepath.Join("./books", bookDir1.Name()), bookDir1.Name())
 		if err != nil {
 			return err
 		}
-		b.dump(tableWriter)
-	}
-	for _, dir := range args {
-		b, err := readBook(dir)
+		fd, err := os.Create(filepath.Join("./books", bookDir1.Name()+".md"))
 		if err != nil {
 			return err
 		}
-		b.dump(tableWriter)
+		b.dump(fd)
+		fd.Close()
 	}
 	return nil
 }
 
 func main() {
-	flag.Parse()
-	if err := mains(flag.Args()); err != nil {
+	if err := mains(); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
