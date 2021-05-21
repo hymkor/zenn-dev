@@ -1,4 +1,2 @@
-pushd "%~dp0\zennmkreadme"
-go build
-popd
-"%~dp0\zennmkreadme\zennmkreadme.exe" > readme.md
+go fmt update.go
+go run update.go > readme.md
