@@ -9,7 +9,24 @@ import (
 	"regexp"
 	"sort"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 )
+
+func readTitleAndSummary(fname string) (string, string, error) {
+	bin, err := os.ReadFile(fname)
+	if err != nil {
+		return "", "", err
+	}
+
+	var y struct {
+		Title   string `yaml:"title"`
+		Summary string `yaml:"summary"`
+	}
+
+	err = yaml.Unmarshal(bin, &y)
+	return y.Title, y.Summary, err
+}
 
 func grepTitle(fname string) (string, error) {
 	fd, err := os.Open(fname)
@@ -54,6 +71,7 @@ type Link struct {
 // Book contains its title and chapters.
 type Book struct {
 	Title      string
+	Summary    string
 	Chapter    []*Link
 	urlBaseDir string
 }
@@ -65,14 +83,16 @@ func readBook(dir string, urlBaseDir string) (*Book, error) {
 	}
 
 	var bookTitle string
+	var bookSummary string
 	chapters := make([]*Link, 0, len(entries))
 	for _, entry := range entries {
 		name := entry.Name()
 		thePath := filepath.Join(dir, name)
 
 		if name == "config.yaml" {
-			if title, err := grepTitle(thePath); err == nil {
+			if title, summary, err := readTitleAndSummary(thePath); err == nil {
 				bookTitle = title
+				bookSummary = summary
 			}
 		} else if m := rxPagePattern.FindStringSubmatch(name); m != nil {
 			if title, err := grepTitle(thePath); err == nil {
@@ -86,13 +106,16 @@ func readBook(dir string, urlBaseDir string) (*Book, error) {
 	sort.Slice(chapters, func(i, j int) bool {
 		return atoi(chapters[i].filename) < atoi(chapters[j].filename)
 	})
-	return &Book{Title: bookTitle, Chapter: chapters, urlBaseDir: urlBaseDir}, nil
+	return &Book{Title: bookTitle, Summary: bookSummary, Chapter: chapters, urlBaseDir: urlBaseDir}, nil
 }
 
 func (b *Book) dump(w io.Writer) {
 	fmt.Fprintln(w, b.Title)
 	fmt.Fprintln(w, "==============")
 	fmt.Fprintln(w)
+	fmt.Fprintln(w, b.Summary)
+	fmt.Fprintln(w)
+
 	for i, c := range b.Chapter {
 		fmt.Fprintf(w, "%d. [%s](%s)\n", i+1, c.Title, c.URL)
 	}
