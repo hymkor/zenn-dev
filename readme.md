@@ -1,7 +1,6 @@
 Articles
 =========
 
-* [Windows と Makefile とボク](articles/9f2a5d1030943d.md)
 * [「コマンドラインシェル？？？　誰でも作れますよ」](articles/d7b76ff6535d7d.md)
 
 Books
