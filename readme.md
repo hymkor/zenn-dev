@@ -2,6 +2,7 @@ Articles
 =========
 
 * [「コマンドラインシェル？？？　誰でも作れますよ」](articles/d7b76ff6535d7d.md)
+* [できた！うかつにもしゃべってしまう nyagos が](articles/talk-nyagos.md)
 
 Books
 ======
