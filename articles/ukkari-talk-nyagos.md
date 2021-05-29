@@ -15,7 +15,7 @@ $x=New-Object -ComObject SAPI.SpVoice
 $x.Speak("早く人間に成りたい")
 ```
 
-あ、COM のインスタンス作ってるじゃないですか。なら、nyagos の内蔵 Lua でもいけるんちゃうか？
+あ、COM のインスタンス作ってるじゃないですか。なら、[nyagos](https://github.com/zetamatta/nyagos) の内蔵 Lua でもいけるんちゃうか？
 
 ```lua
 -- talk.lua
