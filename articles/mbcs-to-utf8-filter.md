@@ -3,7 +3,7 @@ title: "Go言語/Windows向け〈ずぼら式文字コード判定法〉"
 emoji: "ず"
 type: "tech"
 topics: ["go", "utf8", "windows"]
-published: false
+published: true
 ---
 
 「[Windows と Unicode とボク](https://zenn.dev/zetamatta/books/b820d588f4856bcf836c)」でも記しました通り、Windows10 のメモ帳では UTF8 で保存した時、BOM コードを付けなくなりました。
