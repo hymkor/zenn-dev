@@ -204,4 +204,4 @@ UTF8
 
 なお、以上のコードは次のレポジトリより入手できます(MITライセンスにしときます)
 
-https://github.com/zetamatta/go-mbcs-to-utf8-sample
+https://github.com/zetamatta/go-mbcs-to-utf8-filter
