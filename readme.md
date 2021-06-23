@@ -2,7 +2,7 @@ Articles
 =========
 
 * [「コマンドラインシェル？？？　誰でも作れますよ」](articles/d7b76ff6535d7d.md)
-* [Go for Windows での簡単な文字コード判定の提案](articles/mbcs-to-utf8-filter.md)
+* [Go言語によるWindows向け〈ずぼら式文字コード判定法〉](articles/mbcs-to-utf8-filter.md)
 * [できた！うかつにもしゃべってしまう nyagos が](articles/ukkari-talk-nyagos.md)
 
 Books

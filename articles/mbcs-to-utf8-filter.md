@@ -1,5 +1,5 @@
 ---
-title: "Go言語によるWindows向けズボラ式文字コード判定法"
+title: "Go言語によるWindows向け〈ずぼら式文字コード判定法〉"
 emoji: "ず"
 type: "tech"
 topics: ["go", "utf8", "windows"]
@@ -26,8 +26,7 @@ UTF8 の有効範囲で同じことをやればよいのです。有効範囲の
 
 * テキストファイルを一行ずつ読みとる
 * utf8.IsValid が true ならば、その行は UTF8 とする
-* false の場合、その行を現在のコードページの文字列と過程して、  
-    UTF16 への変換に成功したら非UTF8確定 (以降の行も全て非UTF8確定とする)
+* false の場合、その行を現在のコードページの文字列と仮定して、UTF16 への変換に成功したら非UTF8確定 (以降の行も全て非UTF8確定とする)
 * 失敗したら判定失敗とする(バイナリかな？)
 
 ### サンプル
@@ -92,7 +91,7 @@ type Filter struct {
 
 これが文字コード判定機能付きの Scanner の型定義です。基本は bufio.Scanner をラップしますが、Scan() と Text() メソッドだけ、差し替えます。
 
-```
+```go
 func NewFilter(r io.Reader) *Filter {
     return &Filter{
         sc: bufio.NewScanner(r),
@@ -201,7 +200,7 @@ UTF8
 判定できるかな
 ```
 
-いけてるんちゃいます？？
+いけてるんちゃいます？？ (ちなみにコマンドラインシェル [NYAGOS](https://github.com/zetamatta/nyagos) の内蔵コマンド TYPE/MORE では、これとだいたい同じロジックを使ってます)
 
 なお、以上のコードは次のレポジトリより入手できます。
 
