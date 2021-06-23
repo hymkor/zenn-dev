@@ -221,3 +221,8 @@ UTF8
 ```
 
 いけてるんちゃいます？？
+
+
+なお、以上のコードは以下よりゲトできます。
+
+https://github.com/zetamatta/go-mbcs-to-utf8-sample
