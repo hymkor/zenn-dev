@@ -1,5 +1,5 @@
 ---
-title: "Go言語によるWindows向け〈ずぼら式文字コード判定法〉"
+title: "Go言語/Windows向け〈ずぼら式文字コード判定法〉"
 emoji: "ず"
 type: "tech"
 topics: ["go", "utf8", "windows"]
@@ -8,7 +8,7 @@ published: false
 
 「[Windows と Unicode とボク](https://zenn.dev/zetamatta/books/b820d588f4856bcf836c)」でも記しました通り、Windows10 のメモ帳では UTF8 で保存した時、BOM コードを付けなくなりました。
 
-結果として、UTF8 と ANSI を区別する確実な情報はなくなってしまったので、自前で判定しなくてはいけません。
+結果として、UTF8 と ShiftJISなどの非UTF8テキストを区別する確実な情報はなくなってしまったので、自前で判定しなくてはいけません。
 
 本記事では、比較的、お手軽、かつ日本語環境に依存しない判別手順を提案したいと思います。
 
@@ -20,7 +20,7 @@ published: false
 
 ### 提案する方法
 
-UTF8 の有効範囲で同じことをやればよいのです。有効範囲の判定は utf8.IsValid という標準関数があります。
+UTF8 の有効範囲で同じことをやればよいのです。有効範囲の判定は utf8.IsValid という標準関数があります。UTF8 の文字コード範囲というのは意外とシビアなので、これが成功し続けるのに ShiftJIS というのは結構稀なのではないかと思われます。
 
 だいたいのロジック
 
@@ -202,6 +202,6 @@ UTF8
 
 いけてるんちゃいます？？ (ちなみにコマンドラインシェル [NYAGOS](https://github.com/zetamatta/nyagos) の内蔵コマンド TYPE/MORE では、これとだいたい同じロジックを使ってます)
 
-なお、以上のコードは次のレポジトリより入手できます。
+なお、以上のコードは次のレポジトリより入手できます(MITライセンスにしときます)
 
 https://github.com/zetamatta/go-mbcs-to-utf8-sample
