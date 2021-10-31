@@ -43,7 +43,7 @@ func grepTitle(fname string) (string, error) {
 			return strings.Trim(line[len(header):], " \"\r\n"), nil
 		}
 	}
-	return "", io.EOF
+	return "", fmt.Errorf("%s: too near EOF. Title not found", fname)
 }
 
 var rxPagePattern = regexp.MustCompile(`^(\d+)\..*\.md$`)
@@ -139,7 +139,8 @@ func mains() error {
 		thePath := filepath.Join("articles", name)
 		title, err := grepTitle(thePath)
 		if err != nil {
-			return err
+			fmt.Fprintln(os.Stderr, err.Error())
+			continue
 		}
 		fmt.Printf("* [%s](articles/%s)\n", title, name)
 	}
