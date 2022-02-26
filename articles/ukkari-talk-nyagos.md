@@ -10,7 +10,7 @@ published: true
 
 サンプルは PowerShell ですが…
 
-```ps1
+```powershell
 $x=New-Object -ComObject SAPI.SpVoice
 $x.Speak("早く人間に成りたい")
 ```
