@@ -8,6 +8,9 @@ preview:
 new:
 	npx zenn new:article
 
+new-book:
+	npx zenn new:book
+
 init:
 	scoop install nodejs
 	npm init --yes
