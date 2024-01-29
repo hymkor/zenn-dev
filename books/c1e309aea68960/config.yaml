@@ -7,3 +7,4 @@ price: 0 # 有料の場合200〜5000
 chapters:
   - 01_abstruct
   - 02_intro
+  - 03_install
