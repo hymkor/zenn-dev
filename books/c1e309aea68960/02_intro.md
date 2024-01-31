@@ -6,9 +6,7 @@ Jujutsu とは、なにやらネタっぽい名前ですが、Google所属の開
 ただ、名前が災いしてか、ネット検索しても「呪術廻戦」ばかりヒットしてしてしまい、なかなか有用な情報が得られません *(「`martinvonz/jj`」が一番ヒットしやすいかなぁ)*。ですが、一次情報だけでもある程度はつかめます。機械翻訳でがんばりましょう。
 
 + ホームページ：[Jujutsu docs](https://martinvonz.github.io/jj/latest)
-    + チュートリアル：[Tutorial and Birds-Eye View - Jujutsu docs](https://martinvonz.github.io/jj/v0.13.0/tutorial/)
-    + Git との比較：[Git comparison - Jujutsu docs](https://martinvonz.github.io/jj/v0.13.0/git-comparison/)
-+ レポジトリ：[martinvonz/jj: A Git-compatible VCS that is both simple and powerful](https://github.com/martinvonz/jj)
++ レポジトリ：[martinvonz/jj](https://github.com/martinvonz/jj)
 
 とはいえ、ある程度、噛みくだいた日本語の説明もほしいところです。そこで本テキストでは、わたくしなりの観点で「Jujutsu を使って、どういうメリットがあるのか。どう使えばいいのか」を説明してみたいと思います。
 
@@ -30,5 +28,3 @@ Jujutsu とは、なにやらネタっぽい名前ですが、Google所属の開
 + 無名ブランチがある
     + ブランチのあり方は Mercurial ともちょっと違うみたい
     + 無数の先端が発生しうる、既存名前付きをブランチをどちらに進めるか指定が必要
-
-<!-- `branch` は枝の先端ですらでなく、枝の途中のコミットを差すポインター。ただし、このポインターは枝の先端方向へ移動させることしかできず、幹の方向や別の枝にワープというのはできない(削除と再作成が必要)。また、ブランチ上でコミットすれば勝手に先端に移動するものでもない。誤pushを避けるという点で意味がありそう -->

@@ -1,6 +1,6 @@
 title: "次世代バージョン管理システム Jujutsu (jj) の紹介"
-summary: ""
-topics: []
+summary: "今、バージョン管理システムといえば Git です。しかしながら、Linux Kernel のコミッターの負担を軽くする」ことに最適化されたために、コミット漏れの発生のしやすさ・ツール規模の大きさなど必ずしも完璧というわけでもありません。Google開発者 martinvonz 氏による Jujutsu(jj) は Git との互換性を維持しつつも、問題への解決方法を提示しています"
+topics: ["jj","jujutsu","git","DVCS","VCS"]
 published: false
 price: 0 # 有料の場合200〜5000
 # 本に含めるチャプターを順番に並べましょう
