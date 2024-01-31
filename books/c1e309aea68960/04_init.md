@@ -1,5 +1,5 @@
 ---
-title: "レポジトリを領域展開"
+title: "君のレポジトリを領域展開"
 ---
 では、以降は実際に行う順番に Jujutsu の操作を説明します。
 
@@ -43,7 +43,7 @@ GitHub にレポジトリがなく、新規にローカルで Jujutsu 管理を�
 C:> jj init --git
 ```
 
-今のところ、とりあえず `--git` オプションが必須のようです。なしで実行すると
+`--git` オプションなしで実行すると
 
 ```
 C:> jj init
@@ -53,7 +53,7 @@ Set `ui.allow-init-native` to allow initializing a repo with the native backend.
 C:>
 ```
 
-と怒られます。これはおそらくですが、`--git` を最初につけておかないと、あとから GitHub へ push するのが困難になるからではないかと思われます。そのため、明示的に強制実行する形にしないと、git 連携なしには出来ないようにしているのでしょう 【要確認】
+と怒られます。設定を変更すると、`--git` なしで実行できるようですが、[そうした場合](https://martinvonz.github.io/jj/v0.13.0/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
 
 ### 作業ディレクトリの状況の確認
 
