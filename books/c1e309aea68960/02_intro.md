@@ -7,8 +7,9 @@ Jujutsu とは、なにやらネタっぽい名前ですが、Google所属の開
 
 + ホームページ：[Jujutsu docs](https://martinvonz.github.io/jj/latest)
 + レポジトリ：[github.com/martinvonz/jj](https://github.com/martinvonz/jj)
++ Jujutsu の紹介記事：[jj init — Sympolymathesy, by Chris Krycho](https://v5.chriskrycho.com/essays/jj-init/)
 
-とはいえ、ある程度、噛みくだいた日本語の説明もほしいところです。そこで本書では、わたくしなりの観点で「Jujutsu を使って、どういうメリットがあるのか。どう使えばいいのか」を説明し、利用のとっかかりになるものを目指したいと思います。
+とはいえ、ある程度、噛みくだいた日本語の説明もほしいところです。そこで本書では、簡単に「Jujutsu を使って、どういうメリットがあるのか。どう使えばいいのか」を説明し、利用のとっかかりになるものを目指したいと思います。
 
 まず、ざっくりした特徴は次のとおりです。
 
@@ -21,8 +22,9 @@ Jujutsu とは、なにやらネタっぽい名前ですが、Google所属の開
     + No. `jj split` でコミットを適宜分割できる。しかも編集エディターが結構使いやすい！
 + 「ファイルの変更」の他、「ユーザの操作」も履歴管理される
     + ファイルの変更ログは `jj log`、 操作ログは `jj op log`
-    + Git の場合は操作ごとにそれぞれの取り消しの方法があったが、Jujutsu は `jj op undo` で統一されている
-+ GitHub 連携あり
+    + Git の場合は操作ごとにそれぞれの取り消しの方法があったが、Jujutsu は `jj undo` で統一されている
++ ストレージの仮想化
+Git 連携
     + `jj git clone URL` で、既存の Git レポジトリもそのまま Jujutsu で使える。無論一方通行ではなく、GitHub への push も可能。
-+ 無名ブランチがあるが、現在のブランチはない
-    + 無数の先端が発生しうる、既存名前付きをブランチをどちらに進めるか指定が必要
++ 安全な同時レプリケーション (Safe, concurrent replication)
+    + ロックファイルを作らず、作業ログによるマージを行うことにより、rsync、NFS、Dropbox などによる同期へある程度の対応しているそうです。ただし、Gitバックエンドが完全にロックフリーになっているわけではないため、まだレポジトリ破損の可能性は残っています。詳しくは [本家ドキュメントの Concurrency](https://martinvonz.github.io/jj/v0.13.0/technical/concurrency/)を参照のこと
