@@ -38,12 +38,10 @@ C:> jj branch set -r @- main
 
 [^current-branch]: 現在の作業コピーは空だったり、仕掛り中だったりして、あまり push したくない場合が多いですよね。
 
-こうなっている理由としては、jj は無名ブランチを幾らでも作れるので、main/master 由来のブランチのどれが main/master にするか自明ではないからだろうと思われます。
-
 なお、クローンで複製したものではない、`jj init --git` で作成したレポジトリの場合は、初回だけ
 
 + リモートレポジトリとの関連付け:  
-    `jj git remote add origin https://github.com/hymkor/jjtagdesc.git`
+    `jj git remote add origin (URL)`
 + ブランチの設定:  
     `jj branch create -r @- main`
 
