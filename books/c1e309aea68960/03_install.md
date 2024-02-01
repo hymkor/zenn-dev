@@ -15,13 +15,13 @@ jujutsu は Rust製プロダクトですので、
 $ cargo binstall --strategies crate-meta-data jj-cli
 ```
 
-でインストールできるとあります。その他、apt-get, nix, Homebrew, MacPorts などでもサポートされているようです。また、Windows では scoop の main bucket にも入っていたので
+でインストールできるとあります。その他、apt-get, nix, Homebrew, MacPorts などでもサポートされているようです。また、Windows では [scoop](https://scoop.sh) の main bucket にも入っていたので
 
 ```
 C:> scoop install jj
 ```
 
-で導入可能でした。chocolatey は、2024-01-29時点ではまだのようです。
+で導入可能でした。[chocolatey](https://chocolatey.org) は、2024-01-29 時点ではまだのようです。
 
 インストールができたら、初期設定だけやっておきましょう。Git みたいにユーザ名とメールアドレスを登録しておきます。
 
