@@ -1,5 +1,5 @@
 ---
-title: "それでも俺達は git add -p -e したいんだ"
+title: "それでも僕たちは git add -p -e したい"
 ---
 本bookのテキストを編集していたら
 
