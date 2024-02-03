@@ -59,30 +59,20 @@ C:>
 
 `jj init` などの後、作業ディレクトリの状況は `jj status` もしくは省略形の `jj st` で確認できます。
 
-```
-C:> jj st
-The working copy is clean
-Working copy : tusovlyu 6ee1456d (empty) (no description set)
-Parent commit: zzzzzzzz 00000000 (empty) (no description set)
-```
+![](/images/jj-init-and-st.png)
 
 現在の作業コピーが (empty) となっているのはよいとして、その親があって、それも (empty) というのはちょっとおかしく見えます。`jj log` で履歴を見ましょう。
 
-```
-C:> jj log
-@  tusovlyu iyahaya@nifty.com 2024-01-30 18:36:07.000 +09:00 6ee1456d
-│  (empty) (no description set)
-◉  zzzzzzzz root() 00000000
-C:>
-```
+![](/images/jj-init-and-log.png)
 
-親ディレクトリは `root()` という空コミットのようなもののようです。`git` では最初のコミット以前のゼロ状態を指定するのが何かと難しかったので、それに配慮した仕組みかと思われます。
+親ディレクトリは[ルートコミット](https://martinvonz.github.io/jj/v0.13.0/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットは `root()` という関数で参照できます。
 
 ログの列は
 
-1. 変更ID
+1. 変更ID (色が変わっている部分が短縮名)
 2. ユーザ名
 3. 日時
-4. コミットID
+4. (もしあれば)タグやブランチ名
+5. コミットID (色が変わっている部分が短縮名)
 
-の順にならんでいます。ユーザはコミットを指定するために、変更IDとコミットIDのどちらを使ってもよいとされています。変更IDは一度決まれば変わりませんが、コミットIDはそのコミットを変更するたびに変わるものであるために変更IDを指定した方がよさそうです。
+の順にならんでいます。ユーザはコミットを指定するために、変更IDとコミットIDのID全部、短縮名のどちらを使ってもよいとされています。変更IDは一度決まれば変わりませんが、コミットIDはそのコミットを変更するたびに変わるものであるために変更IDを指定した方がよさそうです。
