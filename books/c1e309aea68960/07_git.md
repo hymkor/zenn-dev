@@ -1,5 +1,5 @@
 ---
-title: "git連携"
+title: "ギッハブ大作戦 - 故郷への長い道"
 ---
 `jj git clone` で GitHub からクローンしてきたレポジトリですから、push は `jj git push` で出来そうな気がします。
 
