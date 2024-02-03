@@ -7,4 +7,4 @@ title: "おしまい"
 
 それゆえ、このあたりで終了としたいと思います。 Ate breve! Obrigado!
 
-[docs]: https://martinvonz.github.io/jj/v0.13.0/
+[docs]: https://martinvonz.github.io/jj/latest/

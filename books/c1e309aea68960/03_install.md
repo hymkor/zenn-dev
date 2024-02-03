@@ -7,7 +7,7 @@ Linux, macOS, Windows についてはコンパイル済みのバイナリが Git
 
 同梱されている jj , jj.exe を環境変数PATHで指定されたディレクトリにコピーすれば Ok です。また、サポートしているパッケージマネージャもあります。
 
-+ [Installation and Setup - Jujutsu docs](https://martinvonz.github.io/jj/v0.13.0/install-and-setup/)
++ [Installation and Setup - Jujutsu docs](https://martinvonz.github.io/jj/latest/install-and-setup/)
 
 jujutsu は Rust製プロダクトですので、
 

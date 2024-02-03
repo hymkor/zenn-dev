@@ -29,7 +29,7 @@ Hint: Jujutsu uses libssh2, which doesn't respect ~/.ssh/config. Does `ssh -F /d
 C:>
 ```
 
-[Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/v0.13.0/git-compatibility/)によると、サポートされているのは以下だけとのことです。
+[Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/latest/git-compatibility/)によると、サポートされているのは以下だけとのことです。
 
 + ssh-agent
 + a password-less key ( only `~/.ssh/id_rsa`, `~/.ssh/id_ed25519` or `~/.ssh/id_ed25519_sk)`
@@ -53,7 +53,7 @@ Set `ui.allow-init-native` to allow initializing a repo with the native backend.
 C:>
 ```
 
-と怒られます。設定を変更すると、`--git` なしで実行できるようですが、[そうした場合](https://martinvonz.github.io/jj/v0.13.0/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
+と怒られます。設定を変更すると、`--git` なしで実行できるようですが、[そうした場合](https://martinvonz.github.io/jj/latest/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
 
 ### 作業ディレクトリの状況の確認
 
@@ -65,7 +65,7 @@ C:>
 
 ![](/images/jj-init-and-log.png)
 
-親ディレクトリは[ルートコミット](https://martinvonz.github.io/jj/v0.13.0/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットは `root()` という関数で参照できます。
+親ディレクトリは[ルートコミット](https://martinvonz.github.io/jj/latest/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットは `root()` という関数で参照できます。
 
 ログの列は
 
