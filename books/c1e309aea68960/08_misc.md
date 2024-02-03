@@ -60,7 +60,7 @@ jj edit (変更ID)
 ### ファイルを管理対象外にする
 
 1. `.gitignore` にそのファイルを含むパターンを加える  
-   ※ `.jjignore` というものは v0.13.0 時点ではまだない[^ignored_files]
+   ※ `.jjignore` というものは v0.14 時点ではまだない[^ignored_files]
 2. `jj untrack (ファイル名)`
 
-[^ignored_files]: https://martinvonz.github.io/jj/v0.13.0/working-copy/#ignored-files
+[^ignored_files]: https://martinvonz.github.io/jj/v0.14.0/working-copy/#ignored-files
