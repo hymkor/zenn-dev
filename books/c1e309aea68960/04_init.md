@@ -37,27 +37,28 @@ C:>
 
 ### 新規レポジトリの作成
 
-GitHub にレポジトリがなく、新規にローカルで Jujutsu 管理を始める場合は、そのディレクトリに移動してから init サブコマンドを使います。
+GitHub にレポジトリがなく、新規にローカルで Jujutsu 管理を始める場合は、そのディレクトリに移動してから次のコマンドを発行します。[^init-git]
 
 ```
-C:> jj init --git
+C:> jj git init
 ```
 
-`--git` オプションなしで実行すると
+[^init-git]: jj v0.13.0 までは `jj init --git` というコマンドでしたが、v0.14.0 より Deprecated になり、`jj git init` を使うことになりました。
+
+`git`サブコマンドではない `jj init` もありますが…
 
 ```
-C:> jj init
+$ jj init
 Error: The native backend is disallowed by default.
-Hint: Did you mean to pass `--git`?
+Hint: Did you mean to call `jj git init`?
 Set `ui.allow-init-native` to allow initializing a repo with the native backend.
-C:>
 ```
 
-と怒られます。設定を変更すると、`--git` なしで実行できるようですが、[そうした場合](https://martinvonz.github.io/jj/latest/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
+と怒られます。設定を変更すると、`git` なしで実行できるようですが、[そうした場合](https://martinvonz.github.io/jj/latest/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
 
 ### 作業ディレクトリの状況の確認
 
-`jj init` などの後、作業ディレクトリの状況は `jj status` もしくは省略形の `jj st` で確認できます。
+`jj git init` の後、作業ディレクトリの状況は `jj status` もしくは省略形の `jj st` で確認できます。
 
 ![](/images/jj-init-and-st.png)
 

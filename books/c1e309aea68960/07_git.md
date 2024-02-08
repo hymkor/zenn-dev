@@ -38,7 +38,7 @@ C:> jj branch set -r @- main
 
 [^current-branch]: 現在の作業コピーは空だったり、仕掛り中だったりして、あまり push したくない場合が多いですよね。
 
-なお、クローンで複製したものではない、`jj init --git` で作成したレポジトリの場合は、初回だけ
+なお、クローンで複製したものではない、`jj git init` で作成したレポジトリの場合は、初回だけ
 
 + リモートレポジトリとの関連付け:  
     `jj git remote add origin (URL)`
