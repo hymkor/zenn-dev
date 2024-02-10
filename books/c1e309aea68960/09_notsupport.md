@@ -10,9 +10,7 @@ v0.14.0 時点で出来なくて困ったことをあげます。そのうち、
 [Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/v0.14.0/git-compatibility/#supported-features)
 > * **Tags: Partial.** You can check out tagged commits by name (pointed to be either annotated or lightweight tags), but you cannot create new tags.
 
-タグは部分的サポートで、GitHub より読み込むことはできますが、新規作成はできないようです。この結果、運用としてタグを使っているレポジトリでは移行が難しくなっています。
-
-( 自分も zenn.dev のこのテキストのレポジトリはもう jj で行っているのですが、他の個人開発物のレポジトリでは、リリース作業で `git tag` の使用を前提しており、移行に踏み出せていない状況です )
+タグは部分的サポートで、GitHub より読み込むことはできますが、新規作成はできないようです。今のところ、ブラウザでGitHub側でタグを打って、それを `jj git fetch` で取り込むしか無いようです。
 
 #### git describe 的なもの
 
