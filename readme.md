@@ -12,5 +12,5 @@ Books
 
 * [scoop / nyagos で始めるコマンドライン生活](books/5ac80a9ddb35fef9a146.md)
 * [Windows と Unicode とボク](books/b820d588f4856bcf836c.md)
-* [君のレポジトリを領域展開 - 次世代バージョン管理システム Jujutsu の紹介](books/c1e309aea68960.md)
+* [君のレポジトリを領域展開 - 次世代バージョン管理システム Jujutsu の世界](books/c1e309aea68960.md)
 * [/bin/shに慣れた人に贈るバッチファイルの書き方](books/c84cbe23093eee1b5830.md)
