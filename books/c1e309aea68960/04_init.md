@@ -62,11 +62,13 @@ Set `ui.allow-init-native` to allow initializing a repo with the native backend.
 
 ![](/images/jj-init-and-st.png)
 
-現在の作業コピーが (empty) となっているのはよいとして、その親があって、それも (empty) というのはちょっとおかしく見えます。`jj log` で履歴を見ましょう。
+現在の作業コピーが `(empty)` となっているのはよいとして、その親も `(empty)` というのはちょっと変です。`jj log` で履歴を見ましょう。
 
 ![](/images/jj-init-and-log.png)
 
-親ディレクトリは[ルートコミット](https://martinvonz.github.io/jj/latest/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットは `root()` という関数で参照できます。
+親ディレクトリは[ルートコミット](https://martinvonz.github.io/jj/latest/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットはリビジョン指定[^r]の箇所に `root()` という関数を指定することで参照できます。
+
+[^r]: jj のリビジョン指定は単なる名前指定ではなく、revset と呼ばれる式で範囲指定できるようになっています。詳しくは後述
 
 ログの列は
 
