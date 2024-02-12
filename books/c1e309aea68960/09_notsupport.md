@@ -3,16 +3,14 @@ title: "いまのところ出来ないこと"
 ---
 v0.14.0 時点で出来なくて困ったことをあげます。そのうち、きっとなんとかしてもらえるでしょう(他力本願)
 
-### タグ関連
-
-#### 新規タグの作成
+### 新規タグの作成
 
 [Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/v0.14.0/git-compatibility/#supported-features)
 > * **Tags: Partial.** You can check out tagged commits by name (pointed to be either annotated or lightweight tags), but you cannot create new tags.
 
 タグは部分的サポートで、GitHub より読み込むことはできますが、新規作成はできないようです。今のところ、ブラウザでGitHub側でタグを打って、それを `jj git fetch` で取り込むしか無いようです。
 
-#### git describe 的なもの
+### git describe
 
 プログラムにバージョン文字列(`(最後に打たれたタグ)-(その後積まれたリビジョンの数)-(最新コミットのハッシュ)`)を組み込むために、Makefile に
 
