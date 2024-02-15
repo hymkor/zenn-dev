@@ -1,14 +1,19 @@
 ---
-title: "いまのところ出来ないこと"
+title: "jj 単体で出来ないこと"
 ---
-v0.14.0 時点で出来なくて困ったことをあげます。そのうち、きっとなんとかしてもらえるでしょう(他力本願)
+v0.14.0 時点では jj コマンド単体では出来なくて困ったことをあげます。そのうち、きっとなんとかしてもらえるでしょう(他力本願)
 
 ### 新規タグの作成
 
 [Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/v0.14.0/git-compatibility/#supported-features)
 > * **Tags: Partial.** You can check out tagged commits by name (pointed to be either annotated or lightweight tags), but you cannot create new tags.
 
-タグは部分的サポートで、GitHub より読み込むことはできますが、新規作成はできないようです。今のところ、ブラウザでGitHub側でタグを打って、それを `jj git fetch` で取り込むしか無いようです。
+タグは部分的サポートで、GitHub より読み込むことはできますが、新規作成はできないようです。 今のところ、
+
+- ブラウザ経由操作で GitHub側でタグを打つ
+- `jj git init --git-repo=.` でjj/git共存状態にし、純粋な git コマンドでタグを打つ
+
+という形をとらざるをえないようです。
 
 ### git describe
 
@@ -18,7 +23,7 @@ v0.14.0 時点で出来なくて困ったことをあげます。そのうち、
 VERSION:=$(shell git describe --tags >nul || echo v0.0.0)
 ```
 
-などとしたりしますが、現状、対応するものはなさそうです。ただ、
+などとしたりしますが、現状、対応するものはなさそうです。ただ、Gitとレポジトリを共存させた状態であれば `git describe --tags` が使えますし、さもなければ
 
 ```
 C:> jj log -r "latest(tags())::"
