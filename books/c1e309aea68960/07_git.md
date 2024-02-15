@@ -1,6 +1,8 @@
 ---
 title: "ギッハブ大作戦 - 故郷への長い道"
 ---
+### GitHub への push
+
 `jj git clone` で GitHub からクローンしてきたレポジトリですから、push は `jj git push` で出来そうな気がします。
 
 ```
@@ -40,6 +42,8 @@ C:> jj branch set -r @- main
 
 [^current-branch]: 現在の作業コピーは空だったり、仕掛り中だったりして、あまり push したくない場合が多いですよね。
 
+### クローンしていないレポジトリの場合
+
 なお、クローンで複製したものではない、`jj git init` で作成したレポジトリの場合は、初回だけ
 
 + リモートレポジトリとの関連付け:  
@@ -48,3 +52,28 @@ C:> jj branch set -r @- main
     `jj branch create -r @- main`
 
 など実行が必要になります。
+
+### ワークディレクトリのjj/git の共存化
+
+既にある Git のワークディレクトリ上で
+
+```
+$ jj git init --git-repo=.
+```
+
+を実行すると、同じワークディレクトリで git と jj が共存した形になります。
+
+この状態では「jj にはないが、git にあるコマンド」(`git tag`, `git describe --tag`)がそのまま使えますが、[git の HEAD がブランチではなくコミットを直接指す状態][detached]になるため、gitの操作が一部制限されます(`git push`)
+
+git側の状態は jj 側で認識されるため、一応、不整合な状態などは発生しないようです。`jj log` で確認すると、git の HEAD が `HEAD@git` とマークされており、一応ちゃんと認識されているようです。
+
+[detached]: https://git-scm.com/docs/git-checkout#_detached_head
+
+```
+$ jj log
+@  npzunqrv iyahaya@nifty.com 2024-02-16 23:41:53.000 +09:00 0a15bf3e
+│  (empty) (no description set)
+◉  vtopmqzn iyahaya@nifty.com 2024-02-16 23:41:53.000 +09:00 master HEAD@git 38c0cee6
+│  update the manifest of the scoop-install for v1.1.3
+~
+```
