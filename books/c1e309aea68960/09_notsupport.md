@@ -41,3 +41,11 @@ Windows で Linux 向けソースのメンテをしてきたチームで運用�
 
 [^crlf]: [Working on Windows &gt; Line endings are not converted](https://martinvonz.github.io/jj/v0.14.0/windows/#line-endings-are-not-converted)
 [^crlf2]: 私見ですが、テキストファイルでどういう改行コードを使うかはテキストエディターの設定で調整すべきものだと考えます
+
+### git push -f
+
+GitHub に push してしまうと、リモートだけでなく、ローカルのコミットにも immutable なフラグがつき、もう編集不能になります。
+
+immutable なフラグを外せればよいのですが、外し方が今のところ不明ですし、かつ外せても `git push -f` 的なことはできないように思われます。
+
+こうなってしまうと、もう、一旦他のディレクトリで `git clone` して、そこで過去コミットを編集してから `git push -f` をするしかないのかもしれません。そうして GitHub 側の内容をうまく直せたら、jj のローカルレポジトリで `jj git fetch` すれば直った内容を取り込むことができます。
