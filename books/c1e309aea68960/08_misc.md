@@ -60,3 +60,15 @@ jj edit (変更ID)
 2. `jj untrack (ファイル名)`
 
 [^ignored_files]: https://martinvonz.github.io/jj/v0.14.0/working-copy/#ignored-files
+
+### ファイルのサイズ制限を増やす
+
+通常は 1MB 以上のサイズのファイルをワークディレクトリに置けないのですが
+
+```
+C:> jj config set --repo snapshot.max-new-file-size 5MiB
+```
+
+などとすると、上限を5メガバイトに増やすことができます。 *ですが、これはやらない方がよいです* 
+
+と言いますのは 1MB 以上に増やすと、誤ってバイナリファイルがコミットに含めてしまうリスクが増えるからです。素直に対象のファイルを .gitignore に加えるべきです。
