@@ -26,7 +26,7 @@ VERSION:=$(shell git describe --tags >nul || echo v0.0.0)
 などとしたりしますが、現状、対応するものはなさそうです。ただ、Gitとレポジトリを共存させた状態であれば `git describe --tags` が使えますし、さもなければ
 
 ```
-C:> jj log -r "latest(tags())::"
+$ jj log -r "latest(tags())::"
 ```
 
 で、最後に打たれたタグ〜現在のコミットまでのログを出すことができるので、それをスクリプトで解析して等価なことは可能です[^jjtagdesc]

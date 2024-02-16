@@ -6,16 +6,17 @@ title: "ギッハブ大作戦 - 故郷への長い道"
 `jj git clone` で GitHub からクローンしてきたレポジトリですから、push は `jj git push` で出来そうな気がします。
 
 ```
-C:> jj git push
+$ jj git push
 No branches point to the specified revisions.
 Nothing changed.
-C:>
+
+$
 ```
 
 ダメでした。ログを見ると、`main` はちゃんとありますが、clone した場所がちょっと変です。clone した時点を指しているように見えます。
 
 ```
-C:> jj log
+$ jj log
 @  xmlsppuq iyahaya@nifty.com 2024-01-31 12:34:51.000 +09:00 4ecfc545
 │  (no description set)
 ◉  xmkxylpk iyahaya@nifty.com 2024-01-31 02:22:26.000 +09:00 f835aec9
@@ -33,7 +34,7 @@ C:> jj log
 jj における branch は分岐全体を指すものではなく、特定のコミットを指すポインターになります。これはコミットを積み重ねると勝手に移動するものではなく、次のようなコマンドで移動させる必要があります。
 
 ```
-C:> jj branch set -r @- main
+$ jj branch set -r @- main
 ```
 
 `-r @-` は移動先のリビジョンを「現在の作業コピーの親」とします。`@` が現在の作業コピーで、`-` がその親を意味します[^current-branch]

@@ -66,7 +66,7 @@ jj edit (変更ID)
 通常は 1MB 以上のサイズのファイルをワークディレクトリに置けないのですが
 
 ```
-C:> jj config set --repo snapshot.max-new-file-size 5MiB
+$ jj config set --repo snapshot.max-new-file-size 5MiB
 ```
 
 などとすると、上限を5メガバイトに増やすことができます。 *ですが、これはやらない方がよいです* 

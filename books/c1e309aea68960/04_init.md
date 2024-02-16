@@ -11,22 +11,22 @@ Git と互換系の処理は主に jj のサブコマンド git を使います�
 
 
 ```
-C:> jj git clone https://github.com/hymkor/go-htnblog.git
+$ jj git clone https://github.com/hymkor/go-htnblog.git
 Fetching into new repo in "\\?\C:\Users\hymkor\tmp\go-htnblog"
 Working copy now at: xytwpzqm 610b0e40 (empty) (no description set)
 Parent commit      : xqnlmwrl 7e60edf3 master | htnblog.exe: prevent from refering $EDITOR twice to edit draft
 Added 25 files, modified 0 files, removed 0 files
-C:>
+$
 ```
 
 ただ、残念ながら、git の認証方法によっては、失敗する場合があります。
 
 ```
-C:> jj git clone git@github.com:hymkor/go-htnblog.git
+$ jj git clone git@github.com:hymkor/go-htnblog.git
 Fetching into new repo in "\\?\C:\Users\hymkor\go-htnblog"
 Error: Failed to authenticate SSH session: ; class=Ssh (23)
 Hint: Jujutsu uses libssh2, which doesn't respect ~/.ssh/config. Does `ssh -F /dev/null` to the host work?
-C:>
+$
 ```
 
 [Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/latest/git-compatibility/)によると、サポートされているのは以下だけとのことです。
@@ -40,7 +40,7 @@ C:>
 GitHub にレポジトリがなく、新規にローカルで Jujutsu 管理を始める場合は、そのディレクトリに移動してから次のコマンドを発行します。[^init-git]
 
 ```
-C:> jj git init
+$ jj git init
 ```
 
 [^init-git]: jj v0.13.0 までは `jj init --git` というコマンドでしたが、v0.14.0 より Deprecated になり、`jj git init` を使うことになりました。

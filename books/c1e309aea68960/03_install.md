@@ -18,7 +18,7 @@ $ cargo binstall --strategies crate-meta-data jj-cli
 でインストールできるとあります。その他、apt-get, nix, Homebrew, MacPorts などでもサポートされているようです。また、Windows では [scoop](https://scoop.sh) の main bucket にも入っていたので
 
 ```
-C:> scoop install jj
+$ scoop install jj
 ```
 
 で導入可能でした。[chocolatey](https://chocolatey.org) は、2024-01-29 時点ではまだのようです。
@@ -26,6 +26,6 @@ C:> scoop install jj
 インストールができたら、初期設定だけやっておきましょう。Git みたいにユーザ名とメールアドレスを登録しておきます。
 
 ```
-C:> jj config set --user user.name "(ユーザ名)"
-C:> jj config set --user user.email "(Eメールアドレス)"
+$ jj config set --user user.name "(ユーザ名)"
+$ jj config set --user user.email "(Eメールアドレス)"
 ```
