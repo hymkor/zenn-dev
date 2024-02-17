@@ -64,9 +64,20 @@ $ jj git init --git-repo=.
 
 を実行すると、同じワークディレクトリで git と jj が共存した形になります。
 
-この状態では「jj にはないが、git にあるコマンド」(`git tag`, `git describe --tag`)がそのまま使えますが、[git の HEAD がブランチではなくコミットを直接指す状態][detached]になるため、gitの操作が一部制限されます(`git push`)
+この状態では「jj にはないが、git にあるコマンド」(`git tag`, `git describe --tag`)がそのまま使えますが、[git のカレントブランチがない状態][detached]になるため、gitの操作が一部制限されます。たとえば `git push` も次のようなエラーになります。
 
-git側の状態は jj 側で認識されるため、一応、不整合な状態などは発生しないようです。`jj log` で確認すると、git の HEAD が `HEAD@git` とマークされており、一応ちゃんと認識されているようです。
+```
+$ git push
+fatal: You are not currently on a branch.
+To push the history leading to the current (detached HEAD)
+state now, use
+
+    git push origin HEAD:<name-of-remote-branch>
+```
+
+これは一度 `jj branch track master@origin` を行えば、以後 `jj git push` で代替できるので問題ありません。
+
+また、git側の状態は jj 側で認識されるため、一応、不整合な状態などは発生しないようです。`jj log` で確認すると、git の HEAD が `HEAD@git` とマークされており、一応ちゃんと認識されているようです。
 
 [detached]: https://git-scm.com/docs/git-checkout#_detached_head
 
