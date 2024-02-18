@@ -9,14 +9,11 @@ Jujutsu レポジトリの作成は次の3通りの方法があります。
 
 1. リモートの GitHub レポジトリをローカルに jj レポジトリとしてクローンする
 2. ゼロ状態の jj レポジトリをローカルに作成する[^i]
-3. 既存のローカル git ディレクトリを Git と共存状態で jj レポジトリ化する[^co]
+3. 既存のローカル git ワークディレクトリで、Git と jj を併用する [(後述)][07_git]
 
-[^i]: 作成方法は本ページの後の方に。GitHub へ連携方法は[7. ギッハブ大作戦][myremoteadd] を参照のこと
-[^co]: 作成方法は [7. ギッハブ大作戦][mycolocated] に。詳細は[本家ドキュメントの Working in a Git co-located repository][co]も参照のこと。
+[^i]: 作成方法は本ページの後の方に。GitHub へ連携方法は[後述][07_git]
 
-[co]: https://martinvonz.github.io/jj/v0.14.0/github/#working-in-a-git-co-located-repository
-[myremoteadd]: https://zenn.dev/zetamatta/books/c1e309aea68960/viewer/07_git#%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%B3%E3%81%97%E3%81%A6%E3%81%84%E3%81%AA%E3%81%84%E3%83%AC%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E3%81%AE%E5%A0%B4%E5%90%88
-[mycolocated]: https://zenn.dev/zetamatta/books/c1e309aea68960/viewer/07_git#%E3%83%AF%E3%83%BC%E3%82%AF%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%AEjj%2Fgit-%E3%81%AE%E5%85%B1%E5%AD%98%E5%8C%96
+[07_git]: https://zenn.dev/zetamatta/books/c1e309aea68960/viewer/07_git
 
 まずは、1.の方式で、GitHub の既存レポジトリをローカルに落としましょう。
 Git と互換系の処理は主に jj のサブコマンド git を使います。

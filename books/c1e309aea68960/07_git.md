@@ -54,7 +54,7 @@ $ jj branch set -r @- main
 
 など実行が必要になります。
 
-### ワークディレクトリのjj/git の共存化
+### 同一ワークディレクトリで jj/git を併用
 
 既にある Git のワークディレクトリ上で
 
@@ -62,7 +62,9 @@ $ jj branch set -r @- main
 $ jj git init --git-repo=.
 ```
 
-を実行すると、同じワークディレクトリで git と jj が共存した形になります。
+を実行すると、同じワークディレクトリで git と jj が併用できるようになります。[^wwg]
+
+[^wwg]: [Working in a Git co-located repository](https://martinvonz.github.io/jj/v0.14.0/github/#working-in-a-git-co-located-repository)
 
 この状態では「jj にはないが、git にあるコマンド」(`git tag`, `git describe --tag`)がそのまま使えますが、[git のカレントブランチがない状態][detached]になるため、gitの操作が一部制限されます。たとえば `git push` も次のようなエラーになります。
 
