@@ -74,3 +74,18 @@ $ jj config set --repo snapshot.max-new-file-size 5MiB
 と言いますのは 1MB 以上に増やすと、誤ってバイナリファイルがコミットに含めてしまうリスクが増えるからです。素直に対象のファイルを .gitignore に加えるべきです。[^f]
 
 [^f]: よくあるミスの連鎖は (1)サイズ増やす (2) makeで実行ファイルが作成されるが気付かない (3) そのまま `jj new`, `jj git push` (3) GitHub上に実行ファイルが乗ったのに気付く (4) ローカルのコミットから消して `git push -f` 相当のことをしたくなるが、push 済みのコミットは immutable なのでローカルからも消せない…という事態です。自分は仕方がないので、GitHub 側からコミットを削除して、それを `jj git fetch` で取り込んだ後、ローカルレポジトリの辻褄合わせをしました。
+
+### Windows用の vim でコミットログの編集ができない
+
+v0.15 前後で、コミットログを書くためのファイル名が `\\?\C:\...` 形式に正規化されるようになったようです[^rust-canonical] 。このパスに `?` が含まれるため、vim.exe はワイルドカードと誤認識し、ファイル名展開に失敗してしまうのが原因と考えられます。
+
+[^rust-canonical]: Rust 標準のパス正規化関数 fs::canonicalize の仕様が原因のようです。
+
+回避策としてワイルドカード展開を抑制するオプション --literal を与えれば Ok です。 `jj config edit --user` で
+
+```
+[ui]
+editor = [ "C:/Users/hymkor/scoop/apps/vim/current/gvim.exe" , "--literal" ]
+```
+
+といった設定を追加しましょう。
