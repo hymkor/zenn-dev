@@ -59,14 +59,14 @@ $ jj branch set -r @- main
 既にある Git のワークディレクトリ上で
 
 ```
-$ jj git init --git-repo=.
+$ jj git init --colocate
 ```
 
-を実行すると、同じワークディレクトリで git と jj が併用できるようになります。[^wwg]
+を実行すると、同じワークディレクトリで git と jj が併用できるようになります。[^colocate]
 
-[^wwg]: [Working in a Git co-located repository](https://martinvonz.github.io/jj/v0.14.0/github/#working-in-a-git-co-located-repository)
+[^colocate]: [Working in a Git co-located repository](https://martinvonz.github.io/jj/v0.15.1/github/#working-in-a-git-co-located-repository)。`--colocate` は v0.15.0 で追加されたオプションで、v0.14.0 までは `jj git init --git-repo="."` でした.
 
-この状態では「jj にはないが、git にあるコマンド」(`git tag`, `git describe --tag`)がそのまま使えますが、[git のカレントブランチがない状態][detached]になるため、gitの操作が一部制限されます。たとえば `git push` も次のようなエラーになります。
+この状態では、`git tag`, `git describe --tag` など幾つかのgitコマンドが使えますが、[カレントブランチがない状態][detached]になるため、使えないコマンドもあります。たとえば `git push` も次のようなエラーになります。
 
 ```
 $ git push
