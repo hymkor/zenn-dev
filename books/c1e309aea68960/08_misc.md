@@ -105,3 +105,17 @@ v0.15 前後で、コミットログを書くためのファイル名が `\\?\C:
 ```
 jj config set --user ui.editor "%USERPROFILE%\scoop\apps\vim\current\vim.exe --literal"
 ```
+
+### v0.18.0 にて、jj split の画面が乱れる
+
+`jj split` の編集処理を担う scm-record が更新された影響で、差分テキストのタブを適切に取り扱えなくなったようです。
+
++ [Screen corruption in `--interactive` with tabs · Issue #3944 · martinvonz/jj](https://github.com/martinvonz/jj/issues/3944) 
++ [bug: tab characters not rendered correctly · Issue #2 · arxanas/scm-record](https://github.com/arxanas/scm-record/issues/2)
+
+2024年6月29日現在の対策としては、v0.17.1 あたりのバージョンへ戻すか[^scoop]、別の差分ツールを指定するしかないようです。
+
+[^scoop]: scoop-installer でバージョンを戻す場合は `scoop reset jj@0.17.1` を実行すればよい
+
+
+
