@@ -75,47 +75,4 @@ $ jj config set --repo snapshot.max-new-file-size 5MiB
 
 [^f]: よくあるミスの連鎖は (1)サイズ増やす (2) makeで実行ファイルが作成されるが気付かない (3) そのまま `jj new`, `jj git push` (3) GitHub上に実行ファイルが乗ったのに気付く (4) ローカルのコミットから消して `git push -f` 相当のことをしたくなるが、push 済みのコミットは immutable なのでローカルからも消せない…という事態です。自分は仕方がないので、GitHub 側からコミットを削除して、それを `jj git fetch` で取り込んだ後、ローカルレポジトリの辻褄合わせをしました。
 
-### Windows で指定のテキストエディターが起動しない
-
-テキストエディターの起動パスは、[Editor - Settings - Jujutsu docs](https://martinvonz.github.io/jj/v0.15.1/config/#editor) に記載のとおり
-
-1. 環境変数 $JJ\_EDITOR
-2. 設定ファイル(TOML)の ui.editor
-3. 環境変数 $VISUAL
-4. 環境変数 $EDITOR
-
-の順で探します。
-
-起動パス中の空白はパラメータ区切りとして認識されるため、`C:/Program Files/Notepad++/notepad++.exe` などは `C:/Program` というエディター名と誤認識されます。その場合は、一旦メモ帳などをエディターに指定してから、`jj config edit --user` で設定ファイルを開いて次のように指定してください。
-
-```
-[ui]
-editor = ["C:/Program Files/Notepad++/notepad++.exe",
-    "-multiInst", "-notabbar", "-nosession", "-noPlugin"]
-```
-
-### Windows用の vim でコミットログの編集ができない
-
-v0.15 前後で、コミットログを書くためのファイル名が `\\?\C:\...` 形式に正規化されるようになったようです[^rust-canonical] 。このパスに `?` が含まれるため、vim.exe はワイルドカードと誤認識し、ファイル名展開に失敗してしまうのが原因と考えられます。
-
-[^rust-canonical]: Rust 標準のパス正規化関数 fs::canonicalize の仕様が原因のようです。
-
-回避策としてワイルドカード展開を抑制するオプション --literal を与えれば Ok です。
-
-```
-jj config set --user ui.editor "%USERPROFILE%\scoop\apps\vim\current\vim.exe --literal"
-```
-
-### v0.18.0 にて、jj split の画面が乱れる
-
-`jj split` の編集処理を担う scm-record が更新された影響で、差分テキストのタブを適切に取り扱えなくなったようです。
-
-+ [Screen corruption in `--interactive` with tabs · Issue #3944 · martinvonz/jj](https://github.com/martinvonz/jj/issues/3944) 
-+ [bug: tab characters not rendered correctly · Issue #2 · arxanas/scm-record](https://github.com/arxanas/scm-record/issues/2)
-
-2024年6月29日現在の対策としては、v0.17.1 あたりのバージョンへ戻すか[^scoop]、別の差分ツールを指定するしかないようです。
-
-[^scoop]: scoop-installer でバージョンを戻す場合は `scoop reset jj@0.17.1` を実行すればよい
-
-
 
