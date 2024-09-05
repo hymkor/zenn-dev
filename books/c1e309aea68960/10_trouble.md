@@ -34,17 +34,46 @@ jj config set --user ui.editor "%USERPROFILE%\scoop\apps\vim\current\vim.exe --l
 
 ### v0.18.0 にて、jj split の画面が乱れる
 
-`jj split` の編集処理を担う外部パッケージ [scm-record] が更新された影響で、差分テキストのタブを適切に取り扱えなくなったようです。
+`jj split` の編集処理を担う外部パッケージ [scm-record] が v0.3.0 へ更新された影響で、差分テキストのCR や TAB をうまく表示できなくなったようです。
 
 + [Screen corruption in `--interactive` with tabs · Issue #3944 · martinvonz/jj](https://github.com/martinvonz/jj/issues/3944) 
 + [bug: tab characters not rendered correctly · Issue #2 · arxanas/scm-record](https://github.com/arxanas/scm-record/issues/2)
 + [Built-in diff editor doesn't redraw screen correctly in the presence of tabs · Issue #4001 · martinvonz/jj](https://github.com/martinvonz/jj/issues/4001)
 
-[scm-record] 側では修正パッチがマージされましたが、2024年7月4日現在まだ修正版はリリースされていません([scm-record]の最新リリースの v0.3 には含まれていません)
+[scm-record] 側ではこの不具合を修正するパッチが既にマージされていますが、2025年9月5日現在まだ [scm-record] や jj の最新リリースに含まれていません
 
 + [fix: force tabs to fixed size by firestack · Pull Request #37 · arxanas/scm-record](https://github.com/arxanas/scm-record/pull/37)
 
-2024年6月29日現在の対策としては、v0.17.1 あたりのバージョンへ戻すのが早いようです[^scoop]
+2024年9月5日現在の対策としては二種類考えられます。
+
+#### (1) バージョン v0.17.1 を使い続ける
+
+一番、手早い方法です。 scoop-installer でバージョンを戻す場合は `scoop reset jj@0.17.1` を実行すれば Ok です。ただし、最新機能が使えないため、アーリーアダプタ気分が台無しです。
+
+#### (2) scm-record 部分を別途ビルドする
+
+Rust の開発環境がある場合は [scm-record] を実行ファイル scm-diff-editor を自分でビルドして利用するという方法があります。
+
+以下、Windows の場合の手順です
+
+```
+C:> git clone https://github.com/arxanas/scm-record.git
+C:> cd scm-record\scm-diff-editor
+C:> cargo build --release
+C:> copy ..\target\scm-diff-editor.exe (%PATH%の通ったディレクトリ)
+```
+
+`jj config edit --user` で scm-diff-editor を使う設定に追加する
+
+```
+[ui]
+diff-editor = "scm-diff-editor"
+merge-editor = "scm-diff-editor"
+
+[merge-tools.scm-diff-editor]
+program = "scm-diff-editor.exe"
+edit-args = ["--dir-diff", "$left", "$right"]
+```
 
 ### jj split で、削除されたファイルをコミットに含めることができない
 
@@ -59,4 +88,3 @@ issue もあがっていました。
 
 [scm-record]: https://github.com/arxanas/scm-record
 
-[^scoop]: scoop-installer でバージョンを戻す場合は `scoop reset jj@0.17.1` を実行します。
