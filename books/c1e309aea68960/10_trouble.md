@@ -85,6 +85,27 @@ issue もあがっていました。
 
 回避策としては、`jj commit (削除したファイル名)` で別々に分割コミットして、あとから `jj squash` で一つのコミットにマージするのが一番早そうです。
 
+### Linux の実行ファイル名が自動でコミットに含まれがちで困る
+
+実行ファイル名は「拡張子のない、英小文字だけのファイル名になりがち」と想定して、次のようなエントリをグローバルの .gitignore に追加するとよいかもしれません
+
+```
+[a-z]
+[a-z][a-z]
+[a-z][a-z][a-z]
+[a-z][a-z][a-z][a-z]
+[a-z][a-z][a-z][a-z][a-z]
+[a-z][a-z][a-z][a-z][a-z][a-z]
+[a-z][a-z][a-z][a-z][a-z][a-z][a-z]
+[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z]
+![a-z]/
+![a-z][a-z]/
+![a-z][a-z][a-z]/
+![a-z][a-z][a-z][a-z]/
+![a-z][a-z][a-z][a-z][a-z]/
+![a-z][a-z][a-z][a-z][a-z][a-z]/
+![a-z][a-z][a-z][a-z][a-z][a-z][a-z]/
+![a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z]/
+```
 
 [scm-record]: https://github.com/arxanas/scm-record
-
