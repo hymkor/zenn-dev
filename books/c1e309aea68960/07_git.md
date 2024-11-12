@@ -31,15 +31,21 @@ $ jj log
 ~
 ```
 
-Git のbranch は jj では bookmark という特定のコミットを指すポインターに対応します。これは branch と違ってコミットを積み重ねた時に自動で移動しないので、次のようなコマンドで移動させる必要があります。
+Git のbranch は jj では bookmark という特定のコミットを指すポインターに対応します。これは branch と違ってコミットを積み重ねた時に自動で移動しないので、次のようなコマンドで移動させた上で push する必要があります。
 
 ```
-$ jj bookmark set -r "@-" main
+$ jj bookmark move main --to "@-"
+Moved 1 bookmarks to xmkxylpk f835aec9 main* | jujutsu book: add 07_edit
+
+$ jj git push
+Changes to push to origin:
+  Move forward bookmark main from 0f62c769 to f835aec9
+remote: Resolving deltas: 100% (1/1), done.
 ```
 
 `-r "@-"` は移動先のリビジョンを「現在の作業コピーの親」とします。`@` が現在の作業コピーで、`-` がその親を意味します[^current-branch]
 
-※二重引用符は Windows の PowerShell 上で行う場合、`@`マークは演算子と解釈されてしまうため、`"@-"` のように二重引用符で囲むか、`` `@-`` のように `` ` `` でエスケープする必要があります。
+※ 二重引用符は Windows の PowerShell 上で行う場合、`@`マークは演算子と解釈されてしまうため、`"@-"` のように二重引用符で囲むか、`` `@-`` のように `` ` `` でエスケープする必要があります。
 
 [^current-branch]: 現在の作業コピーは空だったり、仕掛り中だったりして、あまり push したくない場合が多いですよね。
 
