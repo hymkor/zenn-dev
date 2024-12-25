@@ -7,7 +7,7 @@ title: "おしまい (そして、変更履歴)"
 
 それゆえ、このあたりで終了としたいと思います。 Ate breve! Obrigado!
 
-[docs]: https://martinvonz.github.io/jj/latest/
+[docs]: https://jj-vcs.github.io/jj/latest/
 
 ### 変更履歴
 
@@ -29,5 +29,6 @@ title: "おしまい (そして、変更履歴)"
 | 2024-09-13 |10.|「Linux の実行ファイル名が自動でコミットに含まれがちで困る」を追加
 | 2024-11-08 | 7.| サブコマンド `branch` → `bookmark` の変更を反映
 |            |10.|「jj split の画面が乱れる」→ 更新: v0.23 にて解消
+| 2024-12-25 |   | Replace URL: https://github.com/martinvonz/jj → https://github.com/jj-vcs/jj
 
 表現の修正程度は適宜行っています

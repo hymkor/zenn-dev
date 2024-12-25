@@ -3,11 +3,11 @@ title: "インストールと初期設定"
 ---
 Linux, macOS, Windows についてはコンパイル済みのバイナリが GitHub の Releases にて配布されています。
 
-- [Releases · martinvonz/jj](https://github.com/martinvonz/jj/releases)
+- [Releases · jj-vcs/jj](https://github.com/jj-vcs/jj/releases)
 
 同梱されている jj , jj.exe を環境変数PATHで指定されたディレクトリにコピーすれば Ok です。また、サポートしているパッケージマネージャもあります。
 
-+ [Installation and Setup - Jujutsu docs](https://martinvonz.github.io/jj/latest/install-and-setup/)
++ [Installation and Setup - Jujutsu docs](https://jj-vcs.github.io/jj/latest/install-and-setup/)
 
 jujutsu は Rust製プロダクトですので、
 

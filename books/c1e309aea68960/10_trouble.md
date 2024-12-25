@@ -3,7 +3,7 @@ title: "不具合・トラブルシューティング"
 ---
 ### Windows で指定のテキストエディターが起動しない
 
-テキストエディターの起動パスは、[Editor - Settings - Jujutsu docs](https://martinvonz.github.io/jj/v0.15.1/config/#editor) に記載のとおり
+テキストエディターの起動パスは、[Editor - Settings - Jujutsu docs](https://jj-vcs.github.io/jj/v0.15.1/config/#editor) に記載のとおり
 
 1. 環境変数 $JJ\_EDITOR
 2. 設定ファイル(TOML)の ui.editor
@@ -41,8 +41,8 @@ jj config set --user ui.editor "%USERPROFILE%\scoop\apps\vim\current\vim.exe --l
 削除されたファイルにチェックを入れても、チェックしていなかったように無視されてしまいます。
 issue もあがっていました。
 
-+ [The builtin diff editor for `jj split` mishandles truncating a file to 0 bytes · Issue #3526 · martinvonz/jj](https://github.com/martinvonz/jj/issues/3526)
-+ [file deletion ignored by `jj split` · Issue #3702 · martinvonz/jj](https://github.com/martinvonz/jj/issues/3702)
++ [The builtin diff editor for `jj split` mishandles truncating a file to 0 bytes · Issue #3526 · jj-vcs/jj](https://github.com/jj-vcs/jj/issues/3526)
++ [file deletion ignored by `jj split` · Issue #3702 · jj-vcs/jj](https://github.com/jj-vcs/jj/issues/3702)
 
 回避策としては、`jj commit (削除したファイル名)` で別々に分割コミットして、あとから `jj squash` で一つのコミットにマージするのが一番早そうです。
 

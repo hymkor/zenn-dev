@@ -7,7 +7,7 @@ v0.14.0 時点の jj コマンド単体では出来なくて困ったことを�
 
 ### 新規タグの作成
 
-[Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/v0.14.0/git-compatibility/#supported-features)
+[Git compatibility - Jujutsu docs](https://jj-vcs.github.io/jj/v0.14.0/git-compatibility/#supported-features)
 > * **Tags: Partial.** You can check out tagged commits by name (pointed to be either annotated or lightweight tags), but you cannot create new tags.
 
 タグは部分的サポートで、GitHub より読み込むことはできますが、新規作成はできないようです。 今のところ、
@@ -46,7 +46,7 @@ Linux で LF で登録された改行は Windows では LF でチェックアウ
 
 Windows で Linux 向けソースのメンテをしてきたチームで運用する場合は注意が必要です。[^crlf2]
 
-[^crlf]: [Working on Windows &gt; Line endings are not converted](https://martinvonz.github.io/jj/v0.14.0/windows/#line-endings-are-not-converted)
+[^crlf]: [Working on Windows &gt; Line endings are not converted](https://jj-vcs.github.io/jj/v0.14.0/windows/#line-endings-are-not-converted)
 [^crlf2]: 私見ですが、テキストファイルでどういう改行コードを使うかはテキストエディターの設定で調整すべきものだと考えます
 
 ### git push -f

@@ -32,7 +32,7 @@ jj edit (変更ID)
 | `git diff`              | `jj diff`    |
 | `git commit --amend -a` | `jj squash`  |
 
-くわしくは [Git comparison - Jujutsu docs &gt; Command equivalence table](https://martinvonz.github.io/jj/latest/git-comparison/#command-equivalence-table)
+くわしくは [Git comparison - Jujutsu docs &gt; Command equivalence table](https://jj-vcs.github.io/jj/latest/git-comparison/#command-equivalence-table)
 
 
 ### リビジョン指定(revset)
@@ -51,7 +51,7 @@ jj edit (変更ID)
 | `latest(foo)` | foo のうちの最も新しいもの |
 | `root()`      | ルートコミット             |
 
-`latest(tags())::` という表現もできます。くわしくは [Revset language - Jujutsu docs](https://martinvonz.github.io/jj/latest/revsets/)
+`latest(tags())::` という表現もできます。くわしくは [Revset language - Jujutsu docs](https://jj-vcs.github.io/jj/latest/revsets/)
 
 ### ファイルを管理対象外にする
 
@@ -59,7 +59,7 @@ jj edit (変更ID)
    ※ `.jjignore` というものは v0.14 時点ではまだない[^ignored_files]
 2. `jj untrack (ファイル名)`
 
-[^ignored_files]: https://martinvonz.github.io/jj/v0.14.0/working-copy/#ignored-files
+[^ignored_files]: https://jj-vcs.github.io/jj/v0.14.0/working-copy/#ignored-files
 
 ### ファイルのサイズ制限を増やす
 

@@ -37,7 +37,7 @@ Hint: Jujutsu uses libssh2, which doesn't respect ~/.ssh/config. Does `ssh -F /d
 $
 ```
 
-[Git compatibility - Jujutsu docs](https://martinvonz.github.io/jj/latest/git-compatibility/)によると、サポートされているのは以下だけとのことです。
+[Git compatibility - Jujutsu docs](https://jj-vcs.github.io/jj/latest/git-compatibility/)によると、サポートされているのは以下だけとのことです。
 
 + ssh-agent
 + a password-less key ( only `~/.ssh/id_rsa`, `~/.ssh/id_ed25519` or `~/.ssh/id_ed25519_sk)`
@@ -62,7 +62,7 @@ Hint: Did you mean to call `jj git init`?
 Set `ui.allow-init-native` to allow initializing a repo with the native backend.
 ```
 
-と怒られます。設定を変更すると、`git` なしで実行できるようですが、[そうした場合](https://martinvonz.github.io/jj/latest/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
+と怒られます。設定を変更すると、`git` なしで実行できるようですが、[そうした場合](https://jj-vcs.github.io/jj/latest/git-comparison/#command-equivalence-table)、 jujutsu ネイティブのレポジトリが作成されます。今のところ遅い上に、clone がまだできないようです。
 
 ### 作業ディレクトリの状況の確認
 
@@ -74,7 +74,7 @@ Set `ui.allow-init-native` to allow initializing a repo with the native backend.
 
 ![](/images/jj-init-and-log.png)
 
-親ディレクトリは[ルートコミット](https://martinvonz.github.io/jj/latest/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットはリビジョン指定[^r]の箇所に `root()` という関数を指定することで参照できます。
+親ディレクトリは[ルートコミット](https://jj-vcs.github.io/jj/latest/glossary/#root-commit)といって、全レポジトリのルートとなる仮想的なコミットです。ルートコミットはリビジョン指定[^r]の箇所に `root()` という関数を指定することで参照できます。
 
 [^r]: jj のリビジョン指定は単なる名前指定ではなく、revset と呼ばれる式で範囲指定できるようになっています。詳しくは後述
 
