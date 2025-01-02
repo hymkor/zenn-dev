@@ -30,5 +30,6 @@ title: "おしまい (そして、変更履歴)"
 | 2024-11-08 | 7.| サブコマンド `branch` → `bookmark` の変更を反映
 |            |10.|「jj split の画面が乱れる」→ 更新: v0.23 にて解消
 | 2024-12-25 |   | Replace URL: https://github.com/martinvonz/jj → https://github.com/jj-vcs/jj
+| 2025-01-02 |10.|「Windows用のvimでコミットログの編集ができない」→ v0.25 にて解消
 
 表現の修正程度は適宜行っています
