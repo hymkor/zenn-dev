@@ -32,5 +32,6 @@ title: "おしまい (そして、変更履歴)"
 | 2024-12-25 |   | Replace URL: https://github.com/martinvonz/jj → https://github.com/jj-vcs/jj
 | 2025-01-02 |10.|「Windows用のvimでコミットログの編集ができない」→ v0.25 にて解消
 |            |3. | `winget install jj-vcs.jj` を追記
+| 2025-01-09 |10.| 追記: `git tag -d` を実行したら、幾つかのコミットが破棄されてしまった
 
 表現の修正程度は適宜行っています

@@ -68,4 +68,17 @@ issue もあがっていました。
 ![a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z]/
 ```
 
+### git tag -d を実行したら、幾つかのコミットが破棄されてしまった。
+
+jj の外で git のタグ・ブランチに変更が行われた時、git の変更を jj へ反映させるプロセスの中で、git から見えないコミットは破棄するという処理が行われるという仕様のようです。[^git-tag-d]
+[^git-tag-d]: https://jj-vcs.github.io/jj/prerelease/config/#abandon-commits-that-became-unreachable-in-git
+
+破棄されたコミットを復元するには
+
+1. `jj op log` で破棄を起した操作 (`import git refs`) の ID を調べる
+2. `jj op undo (ID)` で破棄を発生させた操作を UNDO する
+3. `git tag` で再び適当なタグを打つ  
+    もしくは jj の設定を変更して、破棄させないようにする  
+    `jj config set --user git.abandon-unreachable-commits false`
+
 [scm-record]: https://github.com/arxanas/scm-record
