@@ -64,11 +64,11 @@ Working copy : zlyuxkws 6162265a (no description set)
 Parent commit: zlukvlvx f164507f Fix: 04_init.md
 
 $ jj log
-@  zlyuxkws iyahaya@nifty.com 2024-01-30 20:21:30.000 +09:00 371e3fdb
+@  zlyuxkws iyahaya@example.com 2024-01-30 20:21:30.000 +09:00 371e3fdb
 │  (no description set)
-◉  zlukvlvx iyahaya@nifty.com 2024-01-30 20:20:47.000 +09:00 f164507f
+◉  zlukvlvx iyahaya@example.com 2024-01-30 20:20:47.000 +09:00 f164507f
 │  Fix: 04_init.md
-◉  uuzumwyw iyahaya@nifty.com 2024-01-30 03:29:17.000 +09:00 d8e5a922
+◉  uuzumwyw iyahaya@example.com 2024-01-30 03:29:17.000 +09:00 d8e5a922
 │  jujutsu book: add 04_init
 ：
 ```

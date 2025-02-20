@@ -37,7 +37,7 @@ Working copy now at: tusovlyu f6479066 Add .nyagos
 Parent commit      : zzzzzzzz 00000000 (empty) (no description set)
 
 $ jj log
-@  tusovlyu iyahaya@nifty.com 2024-01-30 19:08:48.000 +09:00 f6479066
+@  tusovlyu iyahaya@example.com 2024-01-30 19:08:48.000 +09:00 f6479066
 │  Add .nyagos
 ◉  zzzzzzzz root() 00000000
 
@@ -58,9 +58,9 @@ Working copy : xyyypnuy cf9ee955 (empty) (no description set)
 Parent commit: tusovlyu f6479066 Add .nyagos
 
 $ jj log
-@  xyyypnuy iyahaya@nifty.com 2024-01-30 19:10:31.000 +09:00 cf9ee955
+@  xyyypnuy iyahaya@example.com 2024-01-30 19:10:31.000 +09:00 cf9ee955
 │  (empty) (no description set)
-◉  tusovlyu iyahaya@nifty.com 2024-01-30 19:08:48.000 +09:00 f6479066
+◉  tusovlyu iyahaya@example.com 2024-01-30 19:08:48.000 +09:00 f6479066
 │  Add .nyagos
 ◉  zzzzzzzz root() 00000000
 

@@ -17,16 +17,16 @@ $
 
 ```
 $ jj log
-@  xmlsppuq iyahaya@nifty.com 2024-01-31 12:34:51.000 +09:00 4ecfc545
+@  xmlsppuq iyahaya@example.com 2024-01-31 12:34:51.000 +09:00 4ecfc545
 │  (no description set)
-◉  xmkxylpk iyahaya@nifty.com 2024-01-31 02:22:26.000 +09:00 f835aec9
+◉  xmkxylpk iyahaya@example.com 2024-01-31 02:22:26.000 +09:00 f835aec9
 │  jujutsu book: add 07_edit
     ：
-◉  zlsztkok iyahaya@nifty.com 2024-01-29 15:11:45.000 +09:00 3f66e36f
+◉  zlsztkok iyahaya@example.com 2024-01-29 15:11:45.000 +09:00 3f66e36f
 │  Add new book for `jj-book`: books/c1e309aea68960/
-◉  poyqqryp iyahaya@nifty.com 2024-01-29 15:08:37.000 +09:00 3f37139d
+◉  poyqqryp iyahaya@example.com 2024-01-29 15:08:37.000 +09:00 3f37139d
 │  Makefile: add entry: new-book
-◉  nzytmsts iyahaya@nifty.com 2023-12-16 14:39:31.000 +09:00 main 0f62c769
+◉  nzytmsts iyahaya@example.com 2023-12-16 14:39:31.000 +09:00 main 0f62c769
 │  バッチファイル入門: 日付書式のdddd が日本語の曜日となる点も補足
 ~
 ```
@@ -91,9 +91,9 @@ state now, use
 
 ```
 $ jj log
-@  npzunqrv iyahaya@nifty.com 2024-02-16 23:41:53.000 +09:00 0a15bf3e
+@  npzunqrv iyahaya@example.com 2024-02-16 23:41:53.000 +09:00 0a15bf3e
 │  (empty) (no description set)
-◉  vtopmqzn iyahaya@nifty.com 2024-02-16 23:41:53.000 +09:00 master HEAD@git 38c0cee6
+◉  vtopmqzn iyahaya@example.com 2024-02-16 23:41:53.000 +09:00 master HEAD@git 38c0cee6
 │  update the manifest of the scoop-install for v1.1.3
 ~
 ```
