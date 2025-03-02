@@ -22,4 +22,4 @@ title: "Git に足りなかったもの"
 
 Linux の Kernel 開発の場合は無数の監視する目があるため、コミット漏れによる大事故はあまり聞きませんが、規模の大きくない集団での開発ではリアルなリスクです。ですが、Mercurial の選択は bitbucket もサポートをやめた今、厳しいものがあります。
 
-そんな中に現れたのが Jujutsu です。
+そんな中に現れたのが [Jujutsu](https://github.com/jj-vcs/jj) です。
